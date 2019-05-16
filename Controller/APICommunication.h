@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "AppDefines.h"
+#include "Processing/HttpRequestController.h"
 
 class APICommunication : public QObject
 {
@@ -13,7 +14,7 @@ private:
 public:
     static APICommunication *instance();
 
-    void sendCaptchaScreen(QString screenPath);
+    void sendCaptcherScreen(QString screenPath);
 
 private:
     static APICommunication* m_instance;

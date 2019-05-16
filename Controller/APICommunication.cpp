@@ -1,4 +1,5 @@
 #include "APICommunication.h"
+#include "MainController.h"
 
 APICommunication* APICommunication::m_instance = nullptr;
 
@@ -15,7 +16,10 @@ APICommunication *APICommunication::instance()
     return m_instance;
 }
 
-void APICommunication::sendCaptchaScreen(QString screenPath)
+void APICommunication::sendCaptcherScreen(QString screenPath)
 {
     LOG << "screenPath: " << screenPath;
+    HttpRequestController::instance()->sendHttpRequest(QString("http://poster.de-captcher.com"),\
+                                                       QDir::currentPath() + "/screen.png", \
+                                                       MainController::instance()->getEmailInfor());
 }

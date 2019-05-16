@@ -9,6 +9,16 @@ typedef struct email_infor{
     QString lastName;
     QString userName;
     QString password;
+    QString captcha;
+
+    email_infor(){
+       firstName = "";
+       lastName = "";
+       userName = "";
+       password = "";
+       captcha = "";
+    }
+
 } EMAI_INFOR;
 
 #define LOG qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] >>"

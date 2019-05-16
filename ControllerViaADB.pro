@@ -1,7 +1,7 @@
 QT += quick
 QT += testlib
 
-CONFIG += c++11 console
+CONFIG += c++11 congsole
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -21,7 +21,8 @@ HEADERS += \
     AppEnums.h \
     Controller/MainController.h \
     Processing/ADBCommand.h \
-    Controller/APICommunication.h
+    Controller/APICommunication.h \
+    Processing/HttpRequestController.h
 
 SOURCES += \
         main.cpp \
@@ -29,7 +30,8 @@ SOURCES += \
     AppMain.cpp \
     Controller/MainController.cpp \
     Processing/ADBCommand.cpp \
-    Controller/APICommunication.cpp
+    Controller/APICommunication.cpp \
+    Processing/HttpRequestController.cpp
 
 RESOURCES +=
 

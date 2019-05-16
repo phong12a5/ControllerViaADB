@@ -6,6 +6,7 @@
 #include "Processing/ImageProcessing.h"
 #include "Processing/ADBCommand.h"
 #include "APICommunication.h"
+#include "Processing/HttpRequestController.h"
 
 class MainController : public QObject
 {
@@ -17,9 +18,9 @@ private:
 public:
     static MainController* instance();
     void initController();
+    EMAI_INFOR& getEmailInfor(int id = 0);
 
 private:
-    EMAI_INFOR getEmailInfor(int id = 0);
     bool findAndClick(QString iconPath);
     void inputInforToRegGmail();
 
@@ -28,6 +29,7 @@ private:
     bool inputPassWord();
 private:
     static MainController* m_instance;
+    EMAI_INFOR infor;
 
 signals:
 

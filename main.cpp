@@ -16,8 +16,6 @@ int main(int argc, char *argv[])
     LOG << "CURRENT DIR: " << QDir::currentPath();
     QCoreApplication app(argc, argv);
 
-    //    ADBCommand::instance()->currentActivity();
-
     AppMain appMain;
     appMain.initApplication();
     appMain.startProgram();

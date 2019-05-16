@@ -48,7 +48,15 @@ void MainController::inputInforToRegGmail()
                             // If current screen is Finish account screen -> click I accept button
                             if(this->findAndClick(ACCEPT_BY_ME_ICON)){
                                 while(ADB_CMD->currentActivity() != AUTHENTICATING_SCREEN);
-                                API_COM->sendCaptchaScreen(ADB_CMD->screenShot());
+                                delay(300);
+                                API_COM->sendCaptcherScreen(ADB_CMD->screenShot());
+                                // wait for get captcha from API
+                                while (this->getEmailInfor().captcha == "");
+                                LOG << "Got captcha: " << this->getEmailInfor().captcha;
+
+                                // Enter captcha
+                                ADB_CMD->enterText(this->getEmailInfor().captcha);
+
                             }else{
                                 LOG << "Couldn't press Ignore \"Finish accout screen\"";
                             }
@@ -151,10 +159,9 @@ void MainController::onStartRegGmailProgram()
     }
 }
 
-EMAI_INFOR MainController::getEmailInfor(int id)
+EMAI_INFOR& MainController::getEmailInfor(int id)
 {
     Q_UNUSED(id);
-    EMAI_INFOR infor;
     infor.firstName = "phong";
     infor.lastName = "ba";
     infor.userName = "phong120648293";
