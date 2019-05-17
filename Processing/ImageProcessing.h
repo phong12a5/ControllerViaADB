@@ -10,7 +10,7 @@
 #include <opencv2/imgproc/types_c.h>
 #include "AppDefines.h"
 #include "QPoint"
-
+#include <QFile>
 
 class ImageProcessing : public QObject
 {
@@ -21,7 +21,7 @@ public:
 
 public:
     static QPoint findImageOnImage(const QString& smallImage, const QString& largeImage);
-
+    static QString extractCaptchaImage(const QString& path);
 
 signals:
 

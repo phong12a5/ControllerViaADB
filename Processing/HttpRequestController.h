@@ -14,7 +14,7 @@ private:
     explicit HttpRequestController(QObject *parent = nullptr);
 
 public:
-    void sendHttpRequest(QString uploadUrl, QString photoPath, EMAI_INFOR& _regInfo);
+    void sendHttpRequest(QString uploadUrl, QString photoPath);
 
 public:
     static HttpRequestController* instance();
@@ -22,9 +22,9 @@ public:
 private:
     static HttpRequestController* m_instance;
     QNetworkAccessManager *manager;
-    EMAI_INFOR m_regInfo;
 
 signals:
+    void takeCaptcha(QString captcha);
 
 public slots:
     void requestFinished(QNetworkReply* reply);

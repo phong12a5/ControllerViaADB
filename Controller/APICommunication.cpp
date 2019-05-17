@@ -19,7 +19,12 @@ APICommunication *APICommunication::instance()
 void APICommunication::sendCaptcherScreen(QString screenPath)
 {
     LOG << "screenPath: " << screenPath;
-    HttpRequestController::instance()->sendHttpRequest(QString("http://poster.de-captcher.com"),\
-                                                       QDir::currentPath() + "/screen.png", \
-                                                       MainController::instance()->getEmailInfor());
+
+    QString captchaImg = ImageProcessing::extractCaptchaImage(screenPath);
+    delay(1000);
+    LOG << "captchaImg: " << captchaImg;
+    if(captchaImg != QString("")){
+        HttpRequestController::instance()->sendHttpRequest(QString("http://poster.de-captcher.com"),\
+                                                           QDir::currentPath() + "/captcha.png");
+    }
 }

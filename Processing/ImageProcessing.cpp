@@ -69,3 +69,23 @@ QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QS
     LOG << "Return values: " << retVal << " --- bestMaxVal: " << bestMaxval;
     return retVal;
 }
+
+QString ImageProcessing::extractCaptchaImage(const QString &path)
+{
+    LOG << "Path: " << path;
+
+    cv::Mat src = cv::imread(path.toUtf8().constData());
+    cv::Rect crop(58 , 473, 715, 216);
+    cv::Mat rez = src(crop);
+
+    QString captImgPath = (QDir::currentPath() + "/captcha.png");
+    cv::imwrite(captImgPath.toUtf8().constData(),rez);
+    cv::waitKey(100);
+
+    if(QFile(captImgPath).exists() && !QImage(captImgPath).isNull()){
+        return captImgPath;
+    }else{
+        LOG << "Couldn't extract captcha image";
+        return QString("");
+    }
+}

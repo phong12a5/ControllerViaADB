@@ -16,7 +16,6 @@ typedef struct email_infor{
        lastName = "";
        userName = "";
        password = "";
-       captcha = "";
     }
 
 } EMAI_INFOR;
@@ -24,6 +23,10 @@ typedef struct email_infor{
 #define LOG qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] >>"
 
 #define delay(milescond)    QTest::qSleep(milescond)
+
+#define IMAGE_FOLDER        "/storage/emulated/legacy/DCIM/"
+#define FIRST_NAME_FILE     QDir::currentPath()+"/firstname.txt"
+#define LAST_NAME_FILE      QDir::currentPath()+"/lastname.txt"
 
 
 #define SETTING_PKG             "com.android.settings"

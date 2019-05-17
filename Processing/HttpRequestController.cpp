@@ -8,12 +8,10 @@ HttpRequestController::HttpRequestController(QObject *parent) : QObject(parent)
     connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(requestFinished(QNetworkReply*)));
 }
 
-void HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoPath, EMAI_INFOR& _regInfo)
+void HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoPath)
 {
     LOG << "uploadUrl: " << uploadUrl;
     LOG << "imgPath: " << photoPath;
-
-    m_regInfo = _regInfo;
 
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 
@@ -36,6 +34,7 @@ void HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoPath
     QHttpPart destinationFilePart;
     destinationFilePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("text/plain"));
     destinationFilePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"pict\""));
+
     QFile *file = new QFile(photoPath);
     file->open(QIODevice::ReadOnly);
     destinationFilePart.setBodyDevice(file);
@@ -64,6 +63,7 @@ HttpRequestController *HttpRequestController::instance()
 
 HttpRequestController::~HttpRequestController()
 {
+    LOG;
     delete manager;
 }
 
@@ -79,7 +79,7 @@ void HttpRequestController::requestFinished(QNetworkReply *reply)
         QStringList outputList = QString(reply->readAll()).split('|');
         LOG << "outputList: " << outputList;
         if(outputList.length() > 5){
-            m_regInfo.captcha = outputList.at(5);
+            emit takeCaptcha(outputList.at(5));
         }
         reply->deleteLater();
         manager->clearAccessCache();

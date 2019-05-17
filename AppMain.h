@@ -19,10 +19,7 @@ public:
 
 private:
 
-private:
-
 signals:
-    void startRegGmailProgram();
 
 public slots:
 };

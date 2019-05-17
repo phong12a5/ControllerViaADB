@@ -18,7 +18,8 @@ private:
 public:
     static MainController* instance();
     void initController();
-    EMAI_INFOR& getEmailInfor(int id = 0);
+    EMAI_INFOR& getEmailInfor();
+    void startRegGmailProgram();
 
 private:
     bool findAndClick(QString iconPath);
@@ -27,14 +28,21 @@ private:
     bool inputYourName();
     bool inputUserName();
     bool inputPassWord();
+    bool inputCapcha();
+
+    void readInforFromFile();
+    void setUserInforToReg();
 private:
     static MainController* m_instance;
-    EMAI_INFOR infor;
+    EMAI_INFOR m_userInfor;
+
+    QStringList m_firstNameList;
+    QStringList m_lastNameList;
 
 signals:
 
-public slots:\
-    void onStartRegGmailProgram();
+public slots:
+    void onTakeCaptcha(QString captcha);
 };
 
 #endif // MAINCONTROLLER_H

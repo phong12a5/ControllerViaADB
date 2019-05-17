@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
     AppMain appMain;
     appMain.initApplication();
-    appMain.startProgram();
+//    appMain.startProgram();
 
     return app.exec();
 }

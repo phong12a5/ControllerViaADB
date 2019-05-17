@@ -19,9 +19,9 @@ QString ADBCommand::screenShot(QString fileName, QString path)
 {
     LOG << "Path: " << path  << " --- FileName: " << fileName;
     QProcess proc;
-    proc.start("adb shell screencap -p /storage/emulated/legacy/DCIM/screen.png");
+    proc.start(QString("adb shell screencap -p %1screen.png").arg(IMAGE_FOLDER));
     proc.waitForFinished(-1);
-    proc.start(QString("adb pull /storage/emulated/legacy/DCIM/screen.png %1").arg(path));
+    proc.start(QString("adb pull %1screen.png %2").arg(IMAGE_FOLDER).arg(path));
     proc.waitForFinished(-1);
     return path + "/" + fileName;
 }
