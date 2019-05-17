@@ -14,7 +14,7 @@ private:
 public:
     static APICommunication *instance();
 
-    void sendCaptcherScreen(QString screenPath);
+    QString sendCaptcherScreen(QString screenPath);
 
 private:
     static APICommunication* m_instance;

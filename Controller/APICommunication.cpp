@@ -16,7 +16,7 @@ APICommunication *APICommunication::instance()
     return m_instance;
 }
 
-void APICommunication::sendCaptcherScreen(QString screenPath)
+QString APICommunication::sendCaptcherScreen(QString screenPath)
 {
     LOG << "screenPath: " << screenPath;
 
@@ -24,7 +24,9 @@ void APICommunication::sendCaptcherScreen(QString screenPath)
     delay(1000);
     LOG << "captchaImg: " << captchaImg;
     if(captchaImg != QString("")){
-        HttpRequestController::instance()->sendHttpRequest(QString("http://poster.de-captcher.com"),\
+        return HttpRequestController::instance()->sendHttpRequest(QString("http://poster.de-captcher.com"),\
                                                            QDir::currentPath() + "/captcha.png");
+    }else {
+        return QString("");
     }
 }

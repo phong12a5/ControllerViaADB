@@ -7,6 +7,7 @@
 #include "Processing/ADBCommand.h"
 #include "APICommunication.h"
 #include "Processing/HttpRequestController.h"
+#include <stdio.h>
 
 class MainController : public QObject
 {
@@ -32,6 +33,7 @@ private:
 
     void readInforFromFile();
     void setUserInforToReg();
+    void saveEmailToOutput();
 private:
     static MainController* m_instance;
     EMAI_INFOR m_userInfor;
@@ -42,7 +44,6 @@ private:
 signals:
 
 public slots:
-    void onTakeCaptcha(QString captcha);
 };
 
 #endif // MAINCONTROLLER_H

@@ -5,10 +5,10 @@ HttpRequestController* HttpRequestController::m_instance = nullptr;
 HttpRequestController::HttpRequestController(QObject *parent) : QObject(parent)
 {
     manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(requestFinished(QNetworkReply*)));
+    connect(manager, SIGNAL(finished(QNetworkReply*)), &eventLoop, SLOT(quit()));
 }
 
-void HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoPath)
+QString HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoPath)
 {
     LOG << "uploadUrl: " << uploadUrl;
     LOG << "imgPath: " << photoPath;
@@ -51,6 +51,24 @@ void HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoPath
 
     QNetworkReply *reply = manager->post(request, multiPart);
     multiPart->setParent(reply);
+
+    eventLoop.exec(); // blocks stack until "finished()" has been called
+
+    QString retVal = "";
+
+    if (reply->error() == QNetworkReply::NoError) {
+        QStringList outputList = QString(reply->readAll()).split('|');
+        LOG << "outputList: " << outputList;
+        retVal = outputList.at(5);
+    } else {
+        LOG << "Failure: " <<reply->errorString();
+        retVal = "";
+        delete reply;
+    }
+
+    reply->deleteLater();
+    manager->clearAccessCache();
+    return retVal;
 }
 
 HttpRequestController *HttpRequestController::instance()
@@ -65,23 +83,4 @@ HttpRequestController::~HttpRequestController()
 {
     LOG;
     delete manager;
-}
-
-void HttpRequestController::requestFinished(QNetworkReply *reply)
-{
-    if(reply->error())
-    {
-        LOG << "ERROR!";
-        LOG << reply->errorString();
-    }
-    else
-    {
-        QStringList outputList = QString(reply->readAll()).split('|');
-        LOG << "outputList: " << outputList;
-        if(outputList.length() > 5){
-            emit takeCaptcha(outputList.at(5));
-        }
-        reply->deleteLater();
-        manager->clearAccessCache();
-    }
 }

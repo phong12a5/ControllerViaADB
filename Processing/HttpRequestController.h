@@ -14,20 +14,20 @@ private:
     explicit HttpRequestController(QObject *parent = nullptr);
 
 public:
-    void sendHttpRequest(QString uploadUrl, QString photoPath);
-
-public:
     static HttpRequestController* instance();
     ~HttpRequestController();
+
+    QString sendHttpRequest(QString, QString);
+
 private:
     static HttpRequestController* m_instance;
     QNetworkAccessManager *manager;
+    QEventLoop eventLoop;
 
 signals:
     void takeCaptcha(QString captcha);
 
 public slots:
-    void requestFinished(QNetworkReply* reply);
 };
 
 #endif // HTTPREQUESTCONTROLLER_H

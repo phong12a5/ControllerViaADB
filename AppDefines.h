@@ -16,6 +16,7 @@ typedef struct email_infor{
        lastName = "";
        userName = "";
        password = "";
+       captcha = "";
     }
 
 } EMAI_INFOR;
@@ -27,7 +28,7 @@ typedef struct email_infor{
 #define IMAGE_FOLDER        "/storage/emulated/legacy/DCIM/"
 #define FIRST_NAME_FILE     QDir::currentPath()+"/firstname.txt"
 #define LAST_NAME_FILE      QDir::currentPath()+"/lastname.txt"
-
+#define OUTPUT_FILE         QDir::currentPath()+"/emailList.txt"
 
 #define SETTING_PKG             "com.android.settings"
 #define SETTING_ACTIVITYMAIN    ".Settings"

@@ -8,7 +8,7 @@ MainController* MainController::m_instance = nullptr;
 
 MainController::MainController(QObject *parent) : QObject(parent)
 {
-    connect(HTTP_REQUEST,SIGNAL(takeCaptcha(QString)),this,SLOT(onTakeCaptcha(QString)));
+
 }
 
 MainController *MainController::instance()
@@ -22,6 +22,7 @@ MainController *MainController::instance()
 void MainController::initController()
 {
     LOG;
+    srand(time(nullptr));
     this->readInforFromFile();
     this->setUserInforToReg();
 }
@@ -35,25 +36,53 @@ void MainController::inputInforToRegGmail()
         if(this->inputYourName()){
             // if input your name is completed, waiting for enter username screen is loaded
             while(ADB_CMD->currentActivity() != INPUT_USERNAME_SCREEN);
+            delay(500);
             // if current screen is enter username -> username
             if(this->inputUserName()){
                 // if Enter username is completed, waiting for create password screen is loaded
+                LOG << "Wait for load INPUT_PASSWORD_SCREEN";
                 while(ADB_CMD->currentActivity() != INPUT_PASSWORD_SCREEN);
+                delay(500);
                 // If current screen is enter password -> input password
                 if(this->inputPassWord()){
                     // If enter password is completed, waiting for creat
+                    LOG << "Wait for load RECOVERY_INTRO_SCREEN";
                     while(ADB_CMD->currentActivity() != RECOVERY_INTRO_SCREEN);
+                    delay(500);
                     // If current screen is goole password recovery screen -> click Not Now button
                     if(this->findAndClick(NOT_NOW_ICON)){
+                        LOG << "Wait for load GOOGLE_SERVICE_SCREEN";
                         while(ADB_CMD->currentActivity() != GOOGLE_SERVICE_SCREEN);
+                        delay(500);
                         // If current screen is goole service screen -> click Next button
                         if(this->findAndClick(NEXT_YOURNAME_ICON)){
+                            LOG << "Wait for load TERM_SERVICE_SCREEN";
                             while(ADB_CMD->currentActivity() != TERM_SERVICE_SCREEN);
+                            delay(500);
                             // If current screen is Finish account screen -> click I accept button
                             if(this->findAndClick(ACCEPT_BY_ME_ICON)){
+                                LOG << "Wait for load AUTHENTICATING_SCREEN";
                                 while(ADB_CMD->currentActivity() != AUTHENTICATING_SCREEN);
-                                delay(300);
-                                API_COM->sendCaptcherScreen(ADB_CMD->screenShot());
+                                delay(500);
+                                this->getEmailInfor().captcha = API_COM->sendCaptcherScreen(ADB_CMD->screenShot());
+
+                                if(this->getEmailInfor().captcha != ""){
+                                    // Enter captcha
+                                    ADB_CMD->enterText(this->getEmailInfor().captcha);
+                                    delay(500);
+                                    if(this->findAndClick(NEXT_YOURNAME_ICON)){
+                                        delay(2000);
+                                        while(ADB_CMD->currentActivity() == AUTHENTICATING_SCREEN){
+                                            this->getEmailInfor().captcha = API_COM->sendCaptcherScreen(ADB_CMD->screenShot());
+                                            ADB_CMD->enterText(this->getEmailInfor().captcha);
+                                            delay(100);
+                                            this->findAndClick(NEXT_YOURNAME_ICON);
+                                            delay(3000);
+                                        }
+                                        this->saveEmailToOutput();
+                                        this->setUserInforToReg();
+                                    }
+                                }
                             }else{
                                 LOG << "Couldn't press Ignore \"Finish accout screen\"";
                             }
@@ -144,33 +173,34 @@ void MainController::readInforFromFile()
 void MainController::setUserInforToReg()
 {
     QStringList specialCharList = QStringList() << "#" << "@" << "!" << "*" << "%" << "$";
-    m_userInfor.firstName = m_firstNameList.at(qrand() % (m_firstNameList.length()));
-    m_userInfor.lastName = m_lastNameList.at(qrand() % (m_lastNameList.length()));
-    m_userInfor.userName = m_userInfor.firstName + m_userInfor.lastName + QString::number(qrand() % 100000000000 + 10000000);
-    m_userInfor.password = m_userInfor.firstName + m_userInfor.lastName + specialCharList.at(qrand() % (specialCharList.length())) + QString::number(qrand() % 10000000 + 1000000);
+    m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length()));
+    m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length()));
+    m_userInfor.userName = m_userInfor.firstName + m_userInfor.lastName + QString::number(rand() % 100000000000 + 10000000);
+    m_userInfor.password = m_userInfor.firstName + m_userInfor.lastName + specialCharList.at(rand() % (specialCharList.length())) + QString::number(rand() % 10000000 + 1000000);
     LOG << QString("[%1][%2][%3][%4]").arg(m_userInfor.firstName)\
                                         .arg(m_userInfor.lastName)\
                                         .arg(m_userInfor.userName)\
-                                        .arg(m_userInfor.password);
+           .arg(m_userInfor.password);
 }
 
-void MainController::onTakeCaptcha(QString captcha)
+void MainController::saveEmailToOutput()
 {
-    LOG << "Captcha: " << captcha;
-    if(captcha != ""){
-        // Enter captcha
-        ADB_CMD->enterText(captcha);
-        delay(500);
-        this->findAndClick(NEXT_YOURNAME_ICON);
+    QFile outputFile(OUTPUT_FILE);
+
+    if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
+        LOG << "Couldn't open output file";
+        return;
     }
+
+    QTextStream out(&outputFile);
+    out << (this->getEmailInfor().userName + "@gmail.com|" + this->getEmailInfor().password) << "\n";
 }
 
 void MainController::startRegGmailProgram()
 {
     LOG;
 
-    int count = 1;
-    while (count --) {
+    while (true) {
         LOG << "Checking connection ...";
         while (!ADB_CMD->checkConnection());
         // when device is connected
@@ -183,7 +213,7 @@ void MainController::startRegGmailProgram()
         delay(2000);
 
         if(this->findAndClick(AUTO_CHANGE_ICON)){
-            delay(5000);
+            delay(7000);
         }else{
             break;
         }
