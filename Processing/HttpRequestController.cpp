@@ -63,7 +63,6 @@ QString HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoP
     } else {
         LOG << "Failure: " <<reply->errorString();
         retVal = "";
-        delete reply;
     }
 
     reply->deleteLater();

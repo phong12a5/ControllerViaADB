@@ -37,7 +37,7 @@ QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QS
     cv::matchTemplate(_largeImage, _smallImage, result, CV_TM_CCORR_NORMED);
 
 
-    double threshold = 0.9;
+    double threshold = 0.98;
     cv::threshold(result, result, threshold, 1., CV_THRESH_TOZERO);
     double minval, maxval;
     double bestMaxval = 0;

@@ -30,7 +30,7 @@ void MainController::initController()
 void MainController::inputInforToRegGmail()
 {
     LOG;
-
+    while(ADB_CMD->currentActivity() == HOME_SCREEN || ADB_CMD->currentActivity() == WIFI_PICKER_SCREEN);
     if(ADB_CMD->currentActivity() == INPUT_YOURNAME_SCREEN){
         // if current screen is enter your name -> enter your name
         if(this->inputYourName()){
@@ -64,25 +64,7 @@ void MainController::inputInforToRegGmail()
                                 LOG << "Wait for load AUTHENTICATING_SCREEN";
                                 while(ADB_CMD->currentActivity() != AUTHENTICATING_SCREEN);
                                 delay(500);
-                                this->getEmailInfor().captcha = API_COM->sendCaptcherScreen(ADB_CMD->screenShot());
-
-                                if(this->getEmailInfor().captcha != ""){
-                                    // Enter captcha
-                                    ADB_CMD->enterText(this->getEmailInfor().captcha);
-                                    delay(500);
-                                    if(this->findAndClick(NEXT_YOURNAME_ICON)){
-                                        delay(2000);
-                                        while(ADB_CMD->currentActivity() == AUTHENTICATING_SCREEN){
-                                            this->getEmailInfor().captcha = API_COM->sendCaptcherScreen(ADB_CMD->screenShot());
-                                            ADB_CMD->enterText(this->getEmailInfor().captcha);
-                                            delay(100);
-                                            this->findAndClick(NEXT_YOURNAME_ICON);
-                                            delay(3000);
-                                        }
-                                        this->saveEmailToOutput();
-                                        this->setUserInforToReg();
-                                    }
-                                }
+                                this->inputCapcha();
                             }else{
                                 LOG << "Couldn't press Ignore \"Finish accout screen\"";
                             }
@@ -119,7 +101,7 @@ bool MainController::inputUserName()
     LOG;
     EMAI_INFOR info = this->getEmailInfor();
     ADB_CMD->enterText(info.userName);
-    delay(500);
+    delay(100);
     return this->findAndClick(NEXT_YOURNAME_ICON);
 }
 
@@ -134,8 +116,44 @@ bool MainController::inputPassWord()
     ADB_CMD->enterText(info.password);
     ADB_CMD->pressTap();
     ADB_CMD->enterText(info.password);
-    delay(500);
+    delay(100);
     return this->findAndClick(NEXT_YOURNAME_ICON);
+}
+
+void MainController::inputCapcha()
+{
+    LOG;
+    while(ADB_CMD->currentActivity() == AUTHENTICATING_SCREEN){
+        this->getEmailInfor().captcha = API_COM->sendCaptcherScreen(ADB_CMD->screenShot());
+
+        if(this->getEmailInfor().captcha != ""){
+            // Enter captcha
+            ADB_CMD->enterText(this->getEmailInfor().captcha);
+            if(this->findAndClick(NEXT_YOURNAME_ICON)){
+                while(ADB_CMD->currentActivity() == AUTHENTICATING_SCREEN);
+                while(ADB_CMD->currentActivity() == "com.google.android.gsf.login/.CreateAccountTask"||
+                      ADB_CMD->currentActivity() == "com.google.android.gsf.login/.CreateAccountActivity"||
+                      ADB_CMD->currentActivity() == "com.google.android.gsf.login/.SyncIntroActivity"||
+                      ADB_CMD->currentActivity() == "com.google.android.gsf.login/.AccountIntroActivity"||
+                      ADB_CMD->currentActivity() ==  "com.android.settings/.accounts.AddAccountSettings"){
+                    LOG << "Saving account";
+                }
+
+                if(ADB_CMD->currentActivity() ==  AUTHENTICATING_SCREEN){
+                    LOG << "Get and enter captcha again";
+                    continue;
+                }else if(ADB_CMD->currentActivity() == HOME_SCREEN){
+                    this->saveEmailToOutput();
+                    this->setUserInforToReg();
+                    LOG << "Register finished !!!";
+                    delay(1000);
+                    break;
+                }else{
+                    LOG << "UNKNOW RESULT -> EXIT";
+                }
+            }
+        }
+    }
 }
 
 void MainController::readInforFromFile()
@@ -210,12 +228,12 @@ void MainController::startRegGmailProgram()
 
         // Open xgame
         ADB_CMD->requestShowApp(XGAME_PKG,XGAME_ACTIVITYMAIN);
-        delay(2000);
+        delay(1000);
 
         if(this->findAndClick(AUTO_CHANGE_ICON)){
-            delay(7000);
+            delay(8000);
         }else{
-            break;
+            continue;
         }
 
         // reboot device
@@ -235,8 +253,15 @@ void MainController::startRegGmailProgram()
         if(this->findAndClick(GOOGLE_ACCOUNT_ICON)){
             delay(500);
             if(this->findAndClick(ADD_NEW_ACC_ICON)){
+
                 this->inputInforToRegGmail();
+            }else{
+                LOG << "Couldn't click ADD_NEW_ACC_ICON";
+                continue;
             }
+        }else{
+            LOG << "Couldn't click GOOGLE_ACCOUNT_ICON";
+            continue;
         }
     }
 }
@@ -256,6 +281,13 @@ bool MainController::findAndClick(QString iconPath)
         ADB_CMD->tapScreen(point);
         return true;
     }else{
-        return false;
+        screenImgPath = ADB_CMD->screenShot();
+        point = ImageProcessing::findImageOnImage(QDir::currentPath() + iconPath,screenImgPath);
+        if(!point.isNull()){
+            ADB_CMD->tapScreen(point);
+            return true;
+        }else{
+            return false;
+        }
     }
 }

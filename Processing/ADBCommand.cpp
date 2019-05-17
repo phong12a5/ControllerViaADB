@@ -141,10 +141,12 @@ bool ADBCommand::checkConnection()
         output.remove("\n");
         output.remove("\t");
         output.remove(" ");
+        delay(200);
         if(output != ""){
             LOG << "Devices: " << output;
             return true;
         }else {
+            LOG << "There is no device is connected!";
             return false;
         }
     }
@@ -170,6 +172,7 @@ QString ADBCommand::currentActivity()
         }
     }
     LOG << retVal;
+    delay(200);
     return retVal;
 }
 

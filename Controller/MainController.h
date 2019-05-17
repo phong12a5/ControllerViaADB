@@ -29,7 +29,7 @@ private:
     bool inputYourName();
     bool inputUserName();
     bool inputPassWord();
-    bool inputCapcha();
+    void inputCapcha();
 
     void readInforFromFile();
     void setUserInforToReg();
