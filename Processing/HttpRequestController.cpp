@@ -59,7 +59,11 @@ QString HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoP
     if (reply->error() == QNetworkReply::NoError) {
         QStringList outputList = QString(reply->readAll()).split('|');
         LOG << "outputList: " << outputList;
-        retVal = outputList.at(5);
+        if(outputList.length() > 5){
+            retVal = outputList.at(5);
+        }else{
+            retVal = "";
+        }
     } else {
         LOG << "Failure: " <<reply->errorString();
         retVal = "";

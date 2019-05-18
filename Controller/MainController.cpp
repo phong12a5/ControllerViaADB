@@ -133,7 +133,6 @@ void MainController::inputCapcha()
                 while(ADB_CMD->currentActivity() == AUTHENTICATING_SCREEN);
                 while(ADB_CMD->currentActivity() == "com.google.android.gsf.login/.CreateAccountTask"||
                       ADB_CMD->currentActivity() == "com.google.android.gsf.login/.CreateAccountActivity"||
-                      ADB_CMD->currentActivity() == "com.google.android.gsf.login/.SyncIntroActivity"||
                       ADB_CMD->currentActivity() == "com.google.android.gsf.login/.AccountIntroActivity"||
                       ADB_CMD->currentActivity() ==  "com.android.settings/.accounts.AddAccountSettings"){
                     LOG << "Saving account";
@@ -142,11 +141,28 @@ void MainController::inputCapcha()
                 if(ADB_CMD->currentActivity() ==  AUTHENTICATING_SCREEN){
                     LOG << "Get and enter captcha again";
                     continue;
+                }else if(ADB_CMD->currentActivity() == PAYMENT_SETTING_SCREEN){
+                    ADB_CMD->screenShot();
+                    while(true);
+                }else if(ADB_CMD->currentActivity() == "com.google.android.gsf.login/.SyncIntroActivity"){
+                    if(this->findAndClick(NEXT_YOURNAME_ICON)){
+                        this->saveEmailToOutput();
+                        this->setUserInforToReg();
+                        LOG << "Register finished !!!";
+                    }else{
+                        if(ADB_CMD->currentActivity() == HOME_SCREEN){
+                            this->saveEmailToOutput();
+                            this->setUserInforToReg();
+                            LOG << "Register finished !!!";
+                            break;
+                        }else{
+                            LOG << "Couln't determine which screen";
+                        }
+                    }
                 }else if(ADB_CMD->currentActivity() == HOME_SCREEN){
                     this->saveEmailToOutput();
                     this->setUserInforToReg();
                     LOG << "Register finished !!!";
-                    delay(1000);
                     break;
                 }else{
                     LOG << "UNKNOW RESULT -> EXIT";

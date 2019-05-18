@@ -53,6 +53,7 @@ typedef struct email_infor{
 #define AUTHENTICATING_SCREEN   "com.google.android.gsf.login/.CaptchaActivity"
 #define HOME_SCREEN             "com.sonyericsson.home/com.sonymobile.home.HomeActivity"
 #define WIFI_PICKER_SCREEN      "com.android.settings/.wifi.WifiPickerActivity"
+#define PAYMENT_SETTING_SCREEN  "com.android.vending/com.google.android.finsky.billing.promptforfop.SetupWizardPromptForFopActivity"
 
 #endif // APPDEFINES_H
 
