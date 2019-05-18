@@ -5,35 +5,29 @@
 #include <QDir>
 #include "AppDefines.h"
 #include <QProcess>
+#include "Processing/ImageProcessing.h"
 
 class ADBCommand : public QObject
 {
     Q_OBJECT
-private:
-    explicit ADBCommand(QObject *parent = nullptr);
 
 public:
-    static ADBCommand* instance();
 
-    QString screenShot(QString fileName = "screen.png", QString path = QDir::currentPath());
-    void tapScreen(QPoint point);
-    void swipeScreen(QPoint sourcePoint, QPoint desPoint);
-    bool requestShowApp(QString packageName, QString activity);
-    bool goHomeScreen();
-    bool requestShowAppDirectly(QString activity);
-    bool enterText(QString text);
-    bool pressTap();
-    bool rebootDevice();
-    bool checkConnection();
-    bool customCommand(QString cmd);
-    QString currentActivity();
-    void killSpecificApp(QString packageName);
-private:
-    static ADBCommand* m_instance;
-
-signals:
-
-public slots:
+    static QString screenShot(QString fileName = "screen.png", QString path = QDir::currentPath());
+    static void tapScreen(QPoint point);
+    static void swipeScreen(QPoint sourcePoint, QPoint desPoint);
+    static bool requestShowApp(QString packageName, QString activity);
+    static bool goHomeScreen();
+    static bool requestShowAppDirectly(QString activity);
+    static bool enterText(QString text);
+    static bool pressTap();
+    static bool rebootDevice();
+    static bool checkConnection();
+    static bool customCommand(QString cmd);
+    static QString currentActivity();
+    static void killSpecificApp(QString packageName);
+    static bool findAndClick(QString iconPath);
+    static void wakeUpScreen();
 };
 
 #endif // ADBCOMMAND_H

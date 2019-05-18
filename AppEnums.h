@@ -26,6 +26,13 @@ public:
         HMI_CASE_SET_PHOTO_TO_AVT,
         HMI_CASE_UPDATE_INFO
     };
+
+    enum E_EXCUTE_STEPS: int
+    {
+        E_EXCUTE_CHANGE_INFO = 0,
+        E_EXCUTE_REG_GMAIL,
+        E_EXCUTE_REG_FACBOOK,
+    };
 };
 
 #endif // APPENUMS_H

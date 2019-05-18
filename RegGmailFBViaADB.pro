@@ -19,19 +19,21 @@ HEADERS += \
     Processing/ImageProcessing.h \
     AppMain.h \
     AppEnums.h \
-    Controller/MainController.h \
     Processing/ADBCommand.h \
-    Controller/APICommunication.h \
-    Processing/HttpRequestController.h
+    Processing/HttpRequestController.h \
+    Controller/RegDeviceInfoController.h \
+    Controller/RegFBController.h \
+    Controller/RegMailController.h
 
 SOURCES += \
         main.cpp \
     Processing/ImageProcessing.cpp \
     AppMain.cpp \
-    Controller/MainController.cpp \
     Processing/ADBCommand.cpp \
-    Controller/APICommunication.cpp \
-    Processing/HttpRequestController.cpp
+    Processing/HttpRequestController.cpp \
+    Controller/RegDeviceInfoController.cpp \
+    Controller/RegFBController.cpp \
+    Controller/RegMailController.cpp
 
 RESOURCES +=
 

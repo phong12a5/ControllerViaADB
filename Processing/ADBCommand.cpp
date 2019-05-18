@@ -1,20 +1,5 @@
 #include "ADBCommand.h"
 
-ADBCommand* ADBCommand::m_instance = nullptr;
-
-ADBCommand::ADBCommand(QObject *parent) : QObject(parent)
-{
-
-}
-
-ADBCommand *ADBCommand::instance()
-{
-    if(!m_instance) {
-        m_instance = new ADBCommand();
-    }
-    return m_instance;
-}
-
 QString ADBCommand::screenShot(QString fileName, QString path)
 {
     LOG << "Path: " << path  << " --- FileName: " << fileName;
@@ -56,7 +41,10 @@ bool ADBCommand::requestShowApp(QString packageName, QString activity)
 bool ADBCommand::goHomeScreen()
 {
     LOG;
-    this->killSpecificApp(SETTING_PKG);
+    killSpecificApp(SETTING_PKG);
+    killSpecificApp(XGAME_PKG);
+    killSpecificApp(FBLITE_PKG);
+
     QProcess proc;
     proc.start(QString("adb shell input keyevent KEYCODE_HOME"));
     proc.waitForFinished(-1);
@@ -143,7 +131,6 @@ bool ADBCommand::checkConnection()
         output.remove(" ");
         delay(200);
         if(output != ""){
-            LOG << "Devices: " << output;
             return true;
         }else {
             LOG << "There is no device is connected!";
@@ -162,16 +149,25 @@ bool ADBCommand::customCommand(QString cmd)
 QString ADBCommand::currentActivity()
 {
     QString retVal = "";
-    if(this->checkConnection()){
+    if(checkConnection()){
         QProcess proc;
+
+        proc.start(" adb shell dumpsys input_method | grep mScreenOn");
+        proc.waitForFinished(-1);
+
+        if(QString(proc.readAllStandardOutput()).contains("mScreenOn=false")){
+            wakeUpScreen();
+        }
+
         proc.start("adb shell dumpsys window windows | grep -E 'mFocusedApp'");
         proc.waitForFinished(-1);
         QStringList output = QString(proc.readAllStandardOutput()).split(' ');
         if(output.length() > 6){
             retVal = output.at(6);
         }
+    }else{
+        retVal = UNKNOW_SCREEN;
     }
-    LOG << retVal;
     delay(200);
     return retVal;
 }
@@ -194,4 +190,32 @@ void ADBCommand::tapScreen(QPoint point)
     proc.waitForFinished(-1);
     delay(100);
     return;
+}
+
+bool ADBCommand::findAndClick(QString iconPath)
+{
+    QString screenImgPath = ADBCommand::screenShot();
+    QPoint point = ImageProcessing::findImageOnImage(QDir::currentPath() + iconPath,screenImgPath);
+    if(!point.isNull()){
+        ADBCommand::tapScreen(point);
+        return true;
+    }else{
+        screenImgPath = ADBCommand::screenShot();
+        point = ImageProcessing::findImageOnImage(QDir::currentPath() + iconPath,screenImgPath);
+        if(!point.isNull()){
+            ADBCommand::tapScreen(point);
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
+void ADBCommand::wakeUpScreen()
+{
+        LOG;
+        QProcess proc;
+        proc.start("adb shell input keyevent KEYCODE_POWER");
+        proc.waitForFinished(-1);
+        delay(100);
 }

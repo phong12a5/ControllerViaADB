@@ -1,29 +1,27 @@
-#ifndef MAINCONTROLLER_H
-#define MAINCONTROLLER_H
+#ifndef REGMAILCONTROLLER_H
+#define REGMAILCONTROLLER_H
 
 #include <QObject>
 #include "AppDefines.h"
 #include "Processing/ImageProcessing.h"
 #include "Processing/ADBCommand.h"
-#include "APICommunication.h"
 #include "Processing/HttpRequestController.h"
 #include <stdio.h>
 
-class MainController : public QObject
+class RegMailController : public QObject
 {
     Q_OBJECT
 
 private:
-    explicit MainController(QObject *parent = nullptr);
+    explicit RegMailController(QObject *parent = nullptr);
 
 public:
-    static MainController* instance();
-    void initController();
+    static RegMailController* instance();
+    void initRegMailController();
     EMAI_INFOR& getEmailInfor();
     void startRegGmailProgram();
 
 private:
-    bool findAndClick(QString iconPath);
     void inputInforToRegGmail();
 
     bool inputYourName();
@@ -34,8 +32,11 @@ private:
     void readInforFromFile();
     void setUserInforToReg();
     void saveEmailToOutput();
+
+    QString sendCaptcherScreen(QString screenPath);
+
 private:
-    static MainController* m_instance;
+    static RegMailController* m_instance;
     EMAI_INFOR m_userInfor;
 
     QStringList m_firstNameList;
@@ -44,6 +45,7 @@ private:
 signals:
 
 public slots:
+    void onCurrentActivityChanged();
 };
 
-#endif // MAINCONTROLLER_H
+#endif // REGMAILCONTROLLER_H

@@ -48,12 +48,10 @@ QString HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoP
 
 
     const QNetworkRequest request(uploadUrl);
-
     QNetworkReply *reply = manager->post(request, multiPart);
     multiPart->setParent(reply);
 
     eventLoop.exec(); // blocks stack until "finished()" has been called
-
     QString retVal = "";
 
     if (reply->error() == QNetworkReply::NoError) {
