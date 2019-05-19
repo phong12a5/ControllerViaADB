@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     LOG << "CURRENT DIR: " << QDir::currentPath();
     QCoreApplication app(argc, argv);
 
-//    ADBCommand::screenShot("addPicuteProfile.png");
+//    ADBCommand::screenShot();
     AppMain::instance()->initApplication();
     AppMain::instance()->startProgram();
 

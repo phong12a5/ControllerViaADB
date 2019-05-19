@@ -31,6 +31,7 @@ void AppMain::initApplication()
     REG_FBACC_CTR->initRegFBController();
 
     QObject::connect(&m_updateCurrActTimer, SIGNAL(timeout()), this, SLOT(onUpdateCurrentActivity()));
+    QObject::connect(this, SIGNAL(processFinished(int,int)), this, SLOT(onProcessFinished(int,int)));
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_DEVICE_INFO_CTR,   SLOT(onCurrentActivityChanged()));
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_MAIL_CTR,          SLOT(onCurrentActivityChanged()));
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_FBACC_CTR,         SLOT(onCurrentActivityChanged()));
@@ -73,4 +74,32 @@ void AppMain::setCurrentExcuteStep(AppEnums::E_EXCUTE_STEPS step)
 void AppMain::onUpdateCurrentActivity()
 {
     this->setCurrentActivity(ADBCommand::currentActivity());
+}
+
+void AppMain::onProcessFinished(int currentStep, int exitCode)
+{
+    LOG << "currentStep: " << currentStep << " --- exitCode: " << exitCode;
+    if(exitCode == 1){
+        LOG << "Process incompleted! -> Restart process";
+        this->setCurrentExcuteStep(AppEnums::E_EXCUTE_CHANGE_INFO);
+        ADBCommand::goHomeScreen();
+    }else if(exitCode == 0 ){
+        if(currentStep == AppEnums::E_EXCUTE_CHANGE_INFO){
+            this->setCurrentExcuteStep(AppEnums::E_EXCUTE_REG_GMAIL);
+            LOG << "Change infor device completed -> Reboot device!!!";
+            ADBCommand::rebootDevice();
+        }else if(currentStep == AppEnums::E_EXCUTE_REG_GMAIL){
+            REG_FBACC_CTR->setUserInfo(REG_MAIL_CTR->getEmailInfor());
+            REG_MAIL_CTR->saveEmailToOutput();
+            REG_MAIL_CTR->setUserInforToReg();
+            LOG << "Reg gmail completed! -> Start reg facebook";
+            this->setCurrentExcuteStep(AppEnums::E_EXCUTE_REG_FACBOOK);
+            ADBCommand::goHomeScreen();
+        }else if(currentStep == AppEnums::E_EXCUTE_REG_FACBOOK){
+            REG_FBACC_CTR->saveAccInforToOutput();
+            LOG << "Process completed! -> Restart process";
+            this->setCurrentExcuteStep(AppEnums::E_EXCUTE_CHANGE_INFO);
+            ADBCommand::goHomeScreen();
+        }
+    }
 }

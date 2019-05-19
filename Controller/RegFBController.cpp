@@ -37,7 +37,17 @@ void RegFBController::clearCacheFBLite()
 
 EMAI_INFOR &RegFBController::getUserInfo()
 {
-    return RegMailController::instance()->getEmailInfor();
+    return m_userInfo;
+}
+
+void RegFBController::setUserInfo(EMAI_INFOR userInfor)
+{
+    m_userInfo = userInfor;
+}
+
+void RegFBController::saveAccInforToOutput()
+{
+    LOG << getUserInfo().userName;
 }
 
 int RegFBController::currentScreen() const
@@ -48,6 +58,7 @@ int RegFBController::currentScreen() const
 void RegFBController::setCurrentScreen(const int screenID)
 {
     if(m_currentScreenID != screenID){
+        LOG << screenID;
         m_currentScreenID = screenID;
         emit currentScreenChange();
     }
@@ -69,6 +80,9 @@ bool RegFBController::isCurrentScreen(int screenID) const
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM:
         retVal = ADBCommand::findAnImageOnScreen(ENTER_MOBILE_NUM_TEXT);
         break;
+    case AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS:
+        retVal = ADBCommand::findAnImageOnScreen(ENTER_YOUR_EMAIL);
+        break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY:
         retVal = ADBCommand::findAnImageOnScreen(WHAT_YOUR_BIRTHDAY);
         break;
@@ -81,17 +95,17 @@ bool RegFBController::isCurrentScreen(int screenID) const
     case AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO:
         retVal = ADBCommand::findAnImageOnScreen(SAVE_LOGIN_TEXT);
         break;
-    case AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL:
-        retVal = ADBCommand::findAnImageOnScreen(ADD_YOUR_EMAIL);
-        break;
-    case AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL:
-        retVal = ADBCommand::findAnImageOnScreen(CONFIRM_EMAIL);
-        break;
     case AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE:
         retVal = ADBCommand::findAnImageOnScreen(ADD_A_PICTURE);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS:
         retVal = ADBCommand::findAnImageOnScreen(TURN_ON_FIND_FRIEND);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS:
+        retVal = ADBCommand::findAnImageOnScreen(PROFILE_ICON);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_CHECK_POINT:
+        retVal = ADBCommand::findAnImageOnScreen(CHECK_POINT_SCREEN);
         break;
     }
 
@@ -103,6 +117,21 @@ bool RegFBController::isCurrentScreen(int screenID) const
 int RegFBController::findCurrentScreen() const
 {
     LOG;
+    if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_LOGIN))                     return AppEnums::E_FBLITE_SCREEN_ID_LOGIN;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB))              return AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME))           return AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM))     return AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS))  return AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY))       return AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER))         return AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD))       return AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO))      return AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL))        return AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE))      return AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS))         return AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS))            return AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS;
+    else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_CHECK_POINT))          return AppEnums::E_FBLITE_SCREEN_ID_CHECK_POINT;
+    else return -1;
 }
 
 int RegFBController::getGenderRandomly() const
@@ -137,49 +166,56 @@ void RegFBController::onCheckCurrentScreen()
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_LOGIN)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_LOGIN);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_LOGIN:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM:
+        if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS)){
+            this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS);
+        }else{
+            this->setCurrentScreen(this->findCurrentScreen());
+        }
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
 
@@ -187,34 +223,21 @@ void RegFBController::onCheckCurrentScreen()
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO:
-        if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL)){
-            this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL);
-        }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
-        }
-        break;
-    case AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL:
-        if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL)){
-            this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL);
-        }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
-        }
-    case AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS);
         }else{
-//            this->setCurrentScreen(this->findCurrentScreen());
+            this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
     default:
@@ -243,6 +266,9 @@ void RegFBController::onUpdateAction()
         ADBCommand::findAndClick(NEXT_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM:
+        ADBCommand::findAndClick(SIGN_UP_WITH_EMAIL);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS:
         ADBCommand::findAndClick(NEXT_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY:
@@ -269,17 +295,17 @@ void RegFBController::onUpdateAction()
     case AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO:
         ADBCommand::findAndClick(NOT_NOW_BUTTON);
         break;
-    case AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL:
-        ADBCommand::findAndClick(GAMIL_RADIO_BTN);
-        break;
-    case AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL:
-        ADBCommand::findAndClick(YES_BTN);
-        break;
     case AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE:
         ADBCommand::findAndClick(SKIP_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS:
-        ADBCommand::findAndClick(SKIP_BUTTON);
+        ADBCommand::findAndClick(SKIP_FIND_FRIEND);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS:
+        emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),0);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_CHECK_POINT:
+        emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),1);
         break;
     }
 }

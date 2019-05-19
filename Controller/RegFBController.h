@@ -18,10 +18,12 @@ public:
     static RegFBController* instance();
 
     void initRegFBController();
+    EMAI_INFOR &getUserInfo();
+    void setUserInfo(EMAI_INFOR userInfor);
+    void saveAccInforToOutput();
 
 private:
     void clearCacheFBLite();
-    EMAI_INFOR &getUserInfo();
 
     int currentScreen() const;
     void setCurrentScreen(const int screenID);
@@ -33,6 +35,7 @@ private:
 
     QTimer m_checkScreenTimer;
     int m_currentScreenID;
+    EMAI_INFOR m_userInfo;
 signals:
     void currentScreenChange();
 

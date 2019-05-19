@@ -38,8 +38,7 @@ void RegDeviceInfoController::onCurrentActivityChanged()
             if(ADBCommand::findAndClick(AUTO_CHANGE_ICON)){
                 delay(8000);
                 // reboot device]
-                APP_MAIN->setCurrentExcuteStep(AppEnums::E_EXCUTE_REG_GMAIL);
-                ADBCommand::rebootDevice();
+                emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),0);
             }else{
                 ADBCommand::goHomeScreen();
             }

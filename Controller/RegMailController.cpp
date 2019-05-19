@@ -148,8 +148,7 @@ void RegMailController::onCurrentActivityChanged()
             if(this->getEmailInfor().captcha != ""){
 //                this->saveEmailToOutput();
 //                this->setUserInforToReg();
-                APP_MAIN->setCurrentExcuteStep(AppEnums::E_EXCUTE_REG_FACBOOK);
-                emit APP_MAIN->currentActivityChanged();
+                emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),0);
             }else{
                 LOG << "Reqest to go to account setting screen";
                 ADBCommand::requestShowAppDirectly(ACCOUNT_SETTING_ACT);

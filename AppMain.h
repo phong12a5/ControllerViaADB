@@ -42,9 +42,11 @@ private:
 
 signals:
     void currentActivityChanged();
+    void processFinished(int stepId, int exitCode);
 
 public slots:
     void onUpdateCurrentActivity();
+    void onProcessFinished(int currentStep, int exitCode);
 };
 
 #endif // APPMAIN_H

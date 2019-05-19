@@ -19,6 +19,8 @@ public:
     static RegMailController* instance();
     void initRegMailController();
     EMAI_INFOR& getEmailInfor();
+    void setUserInforToReg();
+    void saveEmailToOutput();
 
 private:
     bool inputYourName();
@@ -26,9 +28,6 @@ private:
     bool inputPassWord();
 
     void readInforFromFile();
-    void setUserInforToReg();
-    void saveEmailToOutput();
-
     QString sendCaptcherScreen(QString screenPath);
 
 private:

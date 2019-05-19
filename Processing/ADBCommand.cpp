@@ -2,7 +2,7 @@
 
 QString ADBCommand::screenShot(QString fileName, QString path)
 {
-    LOG << "Path: " << path  << " --- FileName: " << fileName;
+//    LOG << "Path: " << path  << " --- FileName: " << fileName;
     QProcess proc;
     proc.start(QString("adb shell screencap -p %1screen.png").arg(IMAGE_FOLDER));
     proc.waitForFinished(-1);

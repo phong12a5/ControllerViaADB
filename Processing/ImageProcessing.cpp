@@ -7,13 +7,13 @@ ImageProcessing::ImageProcessing(QObject *parent) : QObject(parent)
 
 QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QString &largeImagePath)
 {
-    LOG << "smallImage: " << smallImagePath;
-    LOG << "largeImage: " << largeImagePath;
+//    LOG << "smallImage: " << smallImagePath;
+//    LOG << "largeImage: " << largeImagePath;
 
     QPoint retVal;
 
-    LOG << "Small image: " << QImage(smallImagePath).size();
-    LOG << "Large image: " << QImage(largeImagePath).size();
+//    LOG << "Small image: " << QImage(smallImagePath).size();
+//    LOG << "Large image: " << QImage(largeImagePath).size();
 
     cv::Mat _smallImage = cv::imread(smallImagePath.toUtf8().constData());
     cv::Mat _largeImage = cv::imread(largeImagePath.toUtf8().constData());
@@ -62,7 +62,7 @@ QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QS
             break;
     }
 
-    LOG << "Return values: " << retVal << " --- bestMaxVal: " << bestMaxval;
+//    LOG << "Return values: " << retVal << " --- bestMaxVal: " << bestMaxval;
     return retVal;
 }
 
