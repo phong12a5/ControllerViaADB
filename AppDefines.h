@@ -70,6 +70,9 @@ typedef struct email_infor{
 #define GAMIL_RADIO_BTN         "/IconImage/gmailRadioButton.png"
 #define YES_BTN                 "/IconImage/yesButton.png"
 #define CONFIRM_EMAIL           "/IconImage/confirmEmail.png"
+#define SKIP_BUTTON             "/IconImage/chooseFromGallery.png"
+#define ADD_A_PICTURE           "/IconImage/chooseFromGallery.png"
+#define TURN_ON_FIND_FRIEND     "/IconImage/turnOnFindFriendScr.png"
 
 //HOME activities
 #define HOME_SCREEN             "com.sonyericsson.home/com.sonymobile.home.HomeActivity"
