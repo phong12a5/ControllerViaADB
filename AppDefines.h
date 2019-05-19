@@ -12,10 +12,10 @@ typedef struct email_infor{
     QString captcha;
 
     email_infor(){
-       firstName = "Phong";
-       lastName = "Dang";
-       userName = "PhongDepTrai11889977";
-       password = "Canyouhelpme1276$";
+       firstName = "";
+       lastName = "";
+       userName = "";
+       password = "";
        captcha = "";
     }
 
@@ -40,12 +40,24 @@ typedef struct email_infor{
 #define FBLITE_PKG              "com.facebook.lite"
 #define FBLITE_ACTIVITYMAIN     ".MainActivity"
 
+
+// GOOGLE SETTING icons
 #define AUTO_CHANGE_ICON        "/IconImage/autoChangeBtn.png"
 #define GOOGLE_ACCOUNT_ICON     "/IconImage/googleAccIcon.png"
 #define ADD_NEW_ACC_ICON        "/IconImage/addNewAccIcon.png"
 #define NEXT_YOURNAME_ICON      "/IconImage/NextYourNameIcon.png"
 #define NOT_NOW_ICON            "/IconImage/notNowIcon.png"
 #define ACCEPT_BY_ME_ICON       "/IconImage/acceptByMe.png"
+
+// FACEBOOK LITE icons
+#define CREATE_NEW_FBACC_ICON   "/IconImage/createNewAccIcon.png"
+#define JOIN_FB_TEXT            "/IconImage/JoinFBText.png"
+#define NEXT_BUTTON             "/IconImage/nextBtn.png"
+#define WHAT_YOUR_NAME_TEXT     "/IconImage/InputNameScr.png"
+#define FIRSTNAME_FIELD         "/IconImage/FirstNameField.png"
+#define LASTNAME_FIELD          "/IconImage/LastNameField.png"
+#define ENTER_MOBILE_NUM_TEXT   "/IconImage/enterMobileNumberScr.png"
+#define WHAT_YOUR_BIRTHDAY      "/IconImage/whatYourBirthdayScr.png"
 
 //HOME activities
 #define HOME_SCREEN             "com.sonyericsson.home/com.sonymobile.home.HomeActivity"
@@ -69,6 +81,10 @@ typedef struct email_infor{
 // XGAME activities
 #define XGAME_SCREEN            "app.haonam.xgame/.MainActivity"
 
+// FACEBOOK LITE activity
+#define FACEBOOK_LITE_SCREEN    "com.facebook.lite/.MainActivity"
+
+// UNKNOW_SCREEN
 #define UNKNOW_SCREEN           "UNKNOW_SCREEN"
 
 

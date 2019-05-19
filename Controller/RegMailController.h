@@ -19,15 +19,11 @@ public:
     static RegMailController* instance();
     void initRegMailController();
     EMAI_INFOR& getEmailInfor();
-    void startRegGmailProgram();
 
 private:
-    void inputInforToRegGmail();
-
     bool inputYourName();
     bool inputUserName();
     bool inputPassWord();
-    void inputCapcha();
 
     void readInforFromFile();
     void setUserInforToReg();

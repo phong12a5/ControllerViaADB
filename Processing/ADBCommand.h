@@ -26,8 +26,10 @@ public:
     static bool customCommand(QString cmd);
     static QString currentActivity();
     static void killSpecificApp(QString packageName);
+    static bool findAnImageOnScreen(QString iconPath);
     static bool findAndClick(QString iconPath);
     static void wakeUpScreen();
+    static void clearCacheOfPackage(QString packagName);
 };
 
 #endif // ADBCOMMAND_H

@@ -12,7 +12,7 @@ AppMain::AppMain(QObject *parent) : QObject(parent)
     m_currentActivity = QString("/0");
     m_updateCurrActTimer.setInterval(200);
     m_updateCurrActTimer.setSingleShot(false);
-    m_currentExcuteStep = AppEnums::E_EXCUTE_REG_GMAIL;
+    m_currentExcuteStep = AppEnums::E_EXCUTE_REG_FACBOOK;
 }
 
 AppMain *AppMain::instance()

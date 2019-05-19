@@ -33,6 +33,15 @@ public:
         E_EXCUTE_REG_GMAIL,
         E_EXCUTE_REG_FACBOOK,
     };
+
+    enum E_FBLITE_SCREEN_ID: int
+    {
+        E_FBLITE_SCREEN_ID_LOGIN = 0,
+        E_FBLITE_SCREEN_ID_JOIN_FB,
+        E_FBLITE_SCREEN_ID_ENTER_NAME,
+        E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM,
+        E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY
+    };
 };
 
 #endif // APPENUMS_H

@@ -23,67 +23,10 @@ void RegMailController::initRegMailController()
 {
     LOG;
     srand(time(nullptr));
-//    this->readInforFromFile();
-//    this->setUserInforToReg();
+    this->readInforFromFile();
+    this->setUserInforToReg();
 }
 
-void RegMailController::inputInforToRegGmail()
-{
-    LOG;
-    while(ADBCommand::currentActivity() == HOME_SCREEN || ADBCommand::currentActivity() == WIFI_PICKER_SCREEN);
-    if(ADBCommand::currentActivity() == INPUT_YOURNAME_SCREEN){
-        // if current screen is enter your name -> enter your name
-        if(this->inputYourName()){
-            // if input your name is completed, waiting for enter username screen is loaded
-            while(ADBCommand::currentActivity() != INPUT_USERNAME_SCREEN);
-            delay(500);
-            // if current screen is enter username -> username
-            if(this->inputUserName()){
-                // if Enter username is completed, waiting for create password screen is loaded
-                LOG << "Wait for load INPUT_PASSWORD_SCREEN";
-                while(ADBCommand::currentActivity() != INPUT_PASSWORD_SCREEN);
-                delay(500);
-                // If current screen is enter password -> input password
-                if(this->inputPassWord()){
-                    // If enter password is completed, waiting for creat
-                    LOG << "Wait for load RECOVERY_INTRO_SCREEN";
-                    while(ADBCommand::currentActivity() != RECOVERY_INTRO_SCREEN);
-                    delay(500);
-                    // If current screen is goole password recovery screen -> click Not Now button
-                    if(ADBCommand::findAndClick(NOT_NOW_ICON)){
-                        LOG << "Wait for load GOOGLE_SERVICE_SCREEN";
-                        while(ADBCommand::currentActivity() != GOOGLE_SERVICE_SCREEN);
-                        delay(500);
-                        // If current screen is goole service screen -> click Next button
-                        if(ADBCommand::findAndClick(NEXT_YOURNAME_ICON)){
-                            LOG << "Wait for load TERM_SERVICE_SCREEN";
-                            while(ADBCommand::currentActivity() != TERM_SERVICE_SCREEN);
-                            delay(500);
-                            // If current screen is Finish account screen -> click I accept button
-                            if(ADBCommand::findAndClick(ACCEPT_BY_ME_ICON)){
-                                LOG << "Wait for load AUTHENTICATING_SCREEN";
-                                while(ADBCommand::currentActivity() != AUTHENTICATING_SCREEN);
-                                delay(500);
-                                this->inputCapcha();
-                            }else{
-                                LOG << "Couldn't press Ignore \"Finish accout screen\"";
-                            }
-                        }else{
-                            LOG << "Couldn't press Ignore \"Goole service screen\"";
-                        }
-                    }else{
-                        LOG << "Couldn't press Ignore \"Goole password recovery screen\"";
-                    }
-                }
-            }
-        }else{
-            LOG << "Enter yourname failed";
-            return;
-        }
-    }else{
-        return;
-    }
-}
 
 bool RegMailController::inputYourName()
 {
@@ -120,58 +63,6 @@ bool RegMailController::inputPassWord()
     return ADBCommand::findAndClick(NEXT_YOURNAME_ICON);
 }
 
-void RegMailController::inputCapcha()
-{
-    LOG;
-    while(ADBCommand::currentActivity() == AUTHENTICATING_SCREEN){
-        this->getEmailInfor().captcha = this->sendCaptcherScreen(ADBCommand::screenShot());
-
-        if(this->getEmailInfor().captcha != ""){
-            // Enter captcha
-            ADBCommand::enterText(this->getEmailInfor().captcha);
-            if(ADBCommand::findAndClick(NEXT_YOURNAME_ICON)){
-                while(ADBCommand::currentActivity() == AUTHENTICATING_SCREEN);
-                while(ADBCommand::currentActivity() == "com.google.android.gsf.login/.CreateAccountTask"||
-                      ADBCommand::currentActivity() == "com.google.android.gsf.login/.CreateAccountActivity"||
-                      ADBCommand::currentActivity() == "com.google.android.gsf.login/.AccountIntroActivity"||
-                      ADBCommand::currentActivity() ==  "com.android.settings/.accounts.AddAccountSettings"){
-                    LOG << "Saving account";
-                }
-
-                if(ADBCommand::currentActivity() ==  AUTHENTICATING_SCREEN){
-                    LOG << "Get and enter captcha again";
-                    continue;
-                }else if(ADBCommand::currentActivity() == PAYMENT_SETTING_SCREEN){
-                    ADBCommand::screenShot();
-                    while(true);
-                }else if(ADBCommand::currentActivity() == "com.google.android.gsf.login/.SyncIntroActivity"){
-                    if(ADBCommand::findAndClick(NEXT_YOURNAME_ICON)){
-                        this->saveEmailToOutput();
-                        this->setUserInforToReg();
-                        LOG << "Register finished !!!";
-                    }else{
-                        if(ADBCommand::currentActivity() == HOME_SCREEN){
-                            this->saveEmailToOutput();
-                            this->setUserInforToReg();
-                            LOG << "Register finished !!!";
-                            break;
-                        }else{
-                            LOG << "Couln't determine which screen";
-                        }
-                    }
-                }else if(ADBCommand::currentActivity() == HOME_SCREEN){
-                    this->saveEmailToOutput();
-                    this->setUserInforToReg();
-                    LOG << "Register finished !!!";
-                    break;
-                }else{
-                    LOG << "UNKNOW RESULT -> EXIT";
-                }
-            }
-        }
-    }
-}
-
 void RegMailController::readInforFromFile()
 {
     LOG;
@@ -206,6 +97,7 @@ void RegMailController::readInforFromFile()
 
 void RegMailController::setUserInforToReg()
 {
+    LOG;
     QStringList specialCharList = QStringList() << "#" << "@" << "!" << "*" << "%" << "$";
     m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length()));
     m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length()));
@@ -220,6 +112,7 @@ void RegMailController::setUserInforToReg()
 
 void RegMailController::saveEmailToOutput()
 {
+    LOG;
     QFile outputFile(OUTPUT_FILE);
 
     if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
@@ -253,8 +146,8 @@ void RegMailController::onCurrentActivityChanged()
            APP_MAIN->getCurrentActivity() == NONE_SCREEN)
         {
             if(this->getEmailInfor().captcha != ""){
-                this->setUserInforToReg();
                 this->saveEmailToOutput();
+                this->setUserInforToReg();
                 APP_MAIN->setCurrentExcuteStep(AppEnums::E_EXCUTE_REG_FACBOOK);
                 emit APP_MAIN->currentActivityChanged();
             }else{
@@ -331,21 +224,9 @@ void RegMailController::onCurrentActivityChanged()
     }
 }
 
-void RegMailController::startRegGmailProgram()
-{
-    LOG;
-
-    while (true) {
-        LOG << "Checking connection ...";
-        while (!ADBCommand::checkConnection());
-        // when device is connected
-
-    }
-}
-
 EMAI_INFOR& RegMailController::getEmailInfor()
 {
-//    if(m_userInfor.userName == "")
-//        this->readInforFromFile();
+    if(m_userInfor.userName == "")
+        this->readInforFromFile();
     return m_userInfor;
 }

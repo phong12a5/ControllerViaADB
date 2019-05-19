@@ -182,6 +182,23 @@ void ADBCommand::killSpecificApp(QString packageName)
     return;
 }
 
+bool ADBCommand::findAnImageOnScreen(QString iconPath)
+{
+    QString screenImgPath = ADBCommand::screenShot();
+    QPoint point = ImageProcessing::findImageOnImage(QDir::currentPath() + iconPath,screenImgPath);
+    if(!point.isNull()){
+        return true;
+    }else{
+        screenImgPath = ADBCommand::screenShot();
+        point = ImageProcessing::findImageOnImage(QDir::currentPath() + iconPath,screenImgPath);
+        if(!point.isNull()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
 void ADBCommand::tapScreen(QPoint point)
 {
     LOG << "Tapping at [" << point.x() << "," << point.y() << "]";
@@ -218,4 +235,11 @@ void ADBCommand::wakeUpScreen()
         proc.start("adb shell input keyevent KEYCODE_POWER");
         proc.waitForFinished(-1);
         delay(100);
+}
+
+void ADBCommand::clearCacheOfPackage(QString packagName)
+{
+    QProcess proc;
+    proc.start(QString("adb shell pm clear %1").arg(packagName));
+    proc.waitForFinished(-1);
 }
