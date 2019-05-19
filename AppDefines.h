@@ -21,6 +21,19 @@ typedef struct email_infor{
 
 } EMAI_INFOR;
 
+typedef struct birthday_struct{
+    int month;
+    int day;
+    int year;
+
+    birthday_struct(){
+       month = 7;
+       day = 1;
+       year = 1994;
+    }
+
+} BIRTHDAY_STRUCT;
+
 #define LOG qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] >>"
 
 #define delay(milescond)    QTest::qSleep(milescond)
@@ -78,6 +91,8 @@ typedef struct email_infor{
 #define SKIP_FIND_FRIEND        "/IconImage/skipFindFriend.png"
 #define PROFILE_ICON            "/IconImage/profileIcon.png"
 #define CHECK_POINT_SCREEN      "/IconImage/checkPointScreen.png"
+#define BIRTH_DAY_FIELD         "/IconImage/birdayInputField.png"
+#define KEYBOARD                "/IconImage/keyboard.png"
 
 //HOME activities
 #define HOME_SCREEN             "com.sonyericsson.home/com.sonymobile.home.HomeActivity"

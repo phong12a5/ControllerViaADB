@@ -69,43 +69,43 @@ bool RegFBController::isCurrentScreen(int screenID) const
     bool retVal = false;
     switch (screenID) {
         case AppEnums::E_FBLITE_SCREEN_ID_LOGIN:
-        retVal = ADBCommand::findAnImageOnScreen(CREATE_NEW_FBACC_ICON);
+        retVal = ADBCommand::isOnScreen(CREATE_NEW_FBACC_ICON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB:
-        retVal = ADBCommand::findAnImageOnScreen(JOIN_FB_TEXT);
+        retVal = ADBCommand::isOnScreen(JOIN_FB_TEXT);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME:
-        retVal = ADBCommand::findAnImageOnScreen(WHAT_YOUR_NAME_TEXT);
+        retVal = ADBCommand::isOnScreen(WHAT_YOUR_NAME_TEXT);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM:
-        retVal = ADBCommand::findAnImageOnScreen(ENTER_MOBILE_NUM_TEXT);
+        retVal = ADBCommand::isOnScreen(ENTER_MOBILE_NUM_TEXT);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS:
-        retVal = ADBCommand::findAnImageOnScreen(ENTER_YOUR_EMAIL);
+        retVal = ADBCommand::isOnScreen(ENTER_YOUR_EMAIL);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY:
-        retVal = ADBCommand::findAnImageOnScreen(WHAT_YOUR_BIRTHDAY);
+        retVal = ADBCommand::isOnScreen(WHAT_YOUR_BIRTHDAY);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER:
-        retVal = ADBCommand::findAnImageOnScreen(WHAT_YOUR_GENDER);
+        retVal = ADBCommand::isOnScreen(WHAT_YOUR_GENDER);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD:
-        retVal = ADBCommand::findAnImageOnScreen(CREATE_PASS_SCREEN);
+        retVal = ADBCommand::isOnScreen(CREATE_PASS_SCREEN);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO:
-        retVal = ADBCommand::findAnImageOnScreen(SAVE_LOGIN_TEXT);
+        retVal = ADBCommand::isOnScreen(SAVE_LOGIN_TEXT);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE:
-        retVal = ADBCommand::findAnImageOnScreen(ADD_A_PICTURE);
+        retVal = ADBCommand::isOnScreen(ADD_A_PICTURE);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS:
-        retVal = ADBCommand::findAnImageOnScreen(TURN_ON_FIND_FRIEND);
+        retVal = ADBCommand::isOnScreen(TURN_ON_FIND_FRIEND);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS:
-        retVal = ADBCommand::findAnImageOnScreen(PROFILE_ICON);
+        retVal = ADBCommand::isOnScreen(PROFILE_ICON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_CHECK_POINT:
-        retVal = ADBCommand::findAnImageOnScreen(CHECK_POINT_SCREEN);
+        retVal = ADBCommand::isOnScreen(CHECK_POINT_SCREEN);
         break;
     }
 
@@ -137,6 +137,86 @@ int RegFBController::findCurrentScreen() const
 int RegFBController::getGenderRandomly() const
 {
     return rand() %2 + 0;
+}
+
+void RegFBController::pressKeyBoard(int number)
+{
+    if(number <0){
+        LOG << "Invalid number: " << number;
+        return;
+    }
+    QPoint keyboard = ADBCommand::findAnImageOnScreen(KEYBOARD);
+
+    if(!keyboard.isNull()){
+        QList<int> listNumber;
+        while (number) {
+            int temp = number%10;
+            listNumber.prepend(temp);
+            number /= 10;
+        }
+        while (!listNumber.isEmpty()) {
+            switch (listNumber.takeFirst()) {
+            case 1:
+                ADBCommand::tapScreen(QPoint(keyboard.x() - 450,keyboard.y() - 58));
+                break;
+            case 2:
+                ADBCommand::tapScreen(QPoint(keyboard.x() - 270,keyboard.y() - 58));
+                break;
+            case 3:
+                ADBCommand::tapScreen(QPoint(keyboard.x() - 90,keyboard.y() - 58));
+                break;
+            case 4:
+                ADBCommand::tapScreen(QPoint(keyboard.x() + 90,keyboard.y() - 58));
+                break;
+            case 5:
+                ADBCommand::tapScreen(QPoint(keyboard.x() + 270,keyboard.y() - 58));
+                break;
+            case 6:
+                ADBCommand::tapScreen(QPoint(keyboard.x() - 450,keyboard.y() + 58));
+                break;
+            case 7:
+                ADBCommand::tapScreen(QPoint(keyboard.x() - 270,keyboard.y() + 58));
+                break;
+            case 8:
+                ADBCommand::tapScreen(QPoint(keyboard.x() - 90,keyboard.y() + 58));
+                break;
+            case 9:
+                ADBCommand::tapScreen(QPoint(keyboard.x() + 90,keyboard.y() + 58));
+                break;
+            case 0:
+                ADBCommand::tapScreen(QPoint(keyboard.x() + 270,keyboard.y() + 58));
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
+BIRTHDAY_STRUCT RegFBController::getRandomBirthday()
+{
+    BIRTHDAY_STRUCT retVal;
+    retVal.day = rand()%28 + 0;
+    retVal.month = rand() %12 + 0;
+    retVal.year = rand() % 45 + 1960;
+    return retVal;
+}
+
+void RegFBController::enterBirthDay()
+{
+    LOG;
+    QPoint birthDayField = ADBCommand::findAnImageOnScreen(BIRTH_DAY_FIELD);
+    if(!birthDayField.isNull()){
+        // CLICK MONTH FIELD
+        ADBCommand::tapScreen(QPoint(birthDayField.x() - 110,birthDayField.y()));
+        pressKeyBoard(this->getRandomBirthday().month);
+        // CLICK DAY FIELD
+        ADBCommand::tapScreen(QPoint(birthDayField.x() - 30,birthDayField.y()));
+        pressKeyBoard(this->getRandomBirthday().day);
+        // CLICK YEAR FIELD
+        ADBCommand::tapScreen(QPoint(birthDayField.x() + 80,birthDayField.y()));
+        pressKeyBoard(this->getRandomBirthday().year);
+    }
 }
 
 void RegFBController::onCurrentActivityChanged()
@@ -272,7 +352,7 @@ void RegFBController::onUpdateAction()
         ADBCommand::findAndClick(NEXT_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY:
-        // Do something
+        this->enterBirthDay();
         ADBCommand::findAndClick(NEXT_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER:

@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QTest>
 #include "AppMain.h"
+#include "Controller/RegFBController.h"
 
 int main(int argc, char *argv[])
 {
@@ -8,7 +9,6 @@ int main(int argc, char *argv[])
     LOG << "CURRENT DIR: " << QDir::currentPath();
     QCoreApplication app(argc, argv);
 
-//    ADBCommand::screenShot();
     AppMain::instance()->initApplication();
     AppMain::instance()->startProgram();
 

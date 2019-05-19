@@ -30,6 +30,10 @@ private:
     bool isCurrentScreen(int screenID) const;
     int findCurrentScreen() const;
     int getGenderRandomly() const;
+    void pressKeyBoard(int number);
+    BIRTHDAY_STRUCT getRandomBirthday();
+public:
+    void enterBirthDay();
 private:
     static RegFBController* m_intance;
 

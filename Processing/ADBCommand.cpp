@@ -182,7 +182,7 @@ void ADBCommand::killSpecificApp(QString packageName)
     return;
 }
 
-bool ADBCommand::findAnImageOnScreen(QString iconPath)
+bool ADBCommand::isOnScreen(QString iconPath)
 {
     QString screenImgPath = ADBCommand::screenShot();
     QPoint point = ImageProcessing::findImageOnImage(QDir::currentPath() + iconPath,screenImgPath);
@@ -197,6 +197,17 @@ bool ADBCommand::findAnImageOnScreen(QString iconPath)
             return false;
         }
     }
+}
+
+QPoint ADBCommand::findAnImageOnScreen(QString iconPath)
+{
+    QString screenImgPath = ADBCommand::screenShot();
+    QPoint point = ImageProcessing::findImageOnImage(QDir::currentPath() + iconPath,screenImgPath);
+    if(point.isNull()){
+        screenImgPath = ADBCommand::screenShot();
+        point = ImageProcessing::findImageOnImage(QDir::currentPath() + iconPath,screenImgPath);
+    }
+    return  point;
 }
 
 void ADBCommand::tapScreen(QPoint point)
