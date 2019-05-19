@@ -58,6 +58,18 @@ typedef struct email_infor{
 #define LASTNAME_FIELD          "/IconImage/LastNameField.png"
 #define ENTER_MOBILE_NUM_TEXT   "/IconImage/enterMobileNumberScr.png"
 #define WHAT_YOUR_BIRTHDAY      "/IconImage/whatYourBirthdayScr.png"
+#define WHAT_YOUR_GENDER        "/IconImage/whatYourGender.png"
+#define FEMALE_BUTTON           "/IconImage/femaleIcon.png"
+#define MALE_BUTTON             "/IconImage/maleIcon.png"
+#define CREATE_PASS_SCREEN      "/IconImage/createPassWord.png"
+#define PASSWORD_FIELD          "/IconImage/passwordField.png"
+#define SIGN_UP_BUTTON          "/IconImage/signUpBtn.png"
+#define SAVE_LOGIN_TEXT         "/IconImage/saveLoginInfo.png"
+#define NOT_NOW_BUTTON          "/IconImage/notNowBtn.png"
+#define ADD_YOUR_EMAIL          "/IconImage/addYourEmail.png"
+#define GAMIL_RADIO_BTN         "/IconImage/gmailRadioButton.png"
+#define YES_BTN                 "/IconImage/yesButton.png"
+#define CONFIRM_EMAIL           "/IconImage/confirmEmail.png"
 
 //HOME activities
 #define HOME_SCREEN             "com.sonyericsson.home/com.sonymobile.home.HomeActivity"

@@ -35,6 +35,11 @@ void RegFBController::clearCacheFBLite()
     ADBCommand::clearCacheOfPackage(FBLITE_PKG);
 }
 
+EMAI_INFOR &RegFBController::getUserInfo()
+{
+    return RegMailController::instance()->getEmailInfor();
+}
+
 int RegFBController::currentScreen() const
 {
     return m_currentScreenID;
@@ -67,6 +72,21 @@ bool RegFBController::isCurrentScreen(int screenID) const
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY:
         retVal = ADBCommand::findAnImageOnScreen(WHAT_YOUR_BIRTHDAY);
         break;
+    case AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER:
+        retVal = ADBCommand::findAnImageOnScreen(WHAT_YOUR_GENDER);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD:
+        retVal = ADBCommand::findAnImageOnScreen(CREATE_PASS_SCREEN);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO:
+        retVal = ADBCommand::findAnImageOnScreen(SAVE_LOGIN_TEXT);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL:
+        retVal = ADBCommand::findAnImageOnScreen(ADD_YOUR_EMAIL);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL:
+        retVal = ADBCommand::findAnImageOnScreen(CONFIRM_EMAIL);
+        break;
     }
 
     LOG << "screenID: " << screenID << " --- reval:" << retVal;
@@ -77,6 +97,11 @@ bool RegFBController::isCurrentScreen(int screenID) const
 int RegFBController::findCurrentScreen() const
 {
     LOG;
+}
+
+int RegFBController::getGenderRandomly() const
+{
+    return rand() %2 + 0;
 }
 
 void RegFBController::onCurrentActivityChanged()
@@ -131,6 +156,36 @@ void RegFBController::onCheckCurrentScreen()
         }else{
 //            this->setCurrentScreen(this->findCurrentScreen());
         }
+    }else if(this->currentScreen() == AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY){
+        if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER)){
+            this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER);
+        }else{
+//            this->setCurrentScreen(this->findCurrentScreen());
+        }
+    }else if(this->currentScreen() == AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER){
+        if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD)){
+            this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD);
+        }else{
+//            this->setCurrentScreen(this->findCurrentScreen());
+        }
+    }else if(this->currentScreen() == AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD){
+        if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO)){
+            this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO);
+        }else{
+//            this->setCurrentScreen(this->findCurrentScreen());
+        }
+    }else if(this->currentScreen() == AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO){
+        if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL)){
+            this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL);
+        }else{
+//            this->setCurrentScreen(this->findCurrentScreen());
+        }
+    }else if(this->currentScreen() == AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL){
+        if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL)){
+            this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL);
+        }else{
+//            this->setCurrentScreen(this->findCurrentScreen());
+        }
     }
 }
 
@@ -149,9 +204,9 @@ void RegFBController::onUpdateAction()
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME:
         ADBCommand::findAndClick(FIRSTNAME_FIELD);
-        ADBCommand::enterText("Phong");
+        ADBCommand::enterText(getUserInfo().firstName);
         ADBCommand::findAndClick(LASTNAME_FIELD);
-        ADBCommand::enterText("Dang ");
+        ADBCommand::enterText(getUserInfo().lastName);
         ADBCommand::findAndClick(NEXT_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM:
@@ -160,6 +215,32 @@ void RegFBController::onUpdateAction()
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY:
         // Do something
         ADBCommand::findAndClick(NEXT_BUTTON);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER:
+        // Do something
+    {
+        QString icon;
+        if(this->getGenderRandomly() == 0){
+            icon = FEMALE_BUTTON;
+        }else{
+            icon = MALE_BUTTON;
+        }
+        ADBCommand::findAndClick(icon);
+    }
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD:
+        ADBCommand::findAndClick(PASSWORD_FIELD);
+        ADBCommand::enterText(getUserInfo().password);
+        ADBCommand::findAndClick(SIGN_UP_BUTTON);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO:
+        ADBCommand::findAndClick(NOT_NOW_BUTTON);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_ADD_YOUR_EMAIL:
+        ADBCommand::findAndClick(GAMIL_RADIO_BTN);
+        break;
+    case AppEnums::E_FBLITE_SCREEN_ID_CONFIRM_EMAIL:
+        ADBCommand::findAndClick(YES_BTN);
         break;
     }
 }

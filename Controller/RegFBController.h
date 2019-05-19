@@ -21,17 +21,18 @@ public:
 
 private:
     void clearCacheFBLite();
+    EMAI_INFOR &getUserInfo();
 
     int currentScreen() const;
     void setCurrentScreen(const int screenID);
     bool isCurrentScreen(int screenID) const;
     int findCurrentScreen() const;
+    int getGenderRandomly() const;
 private:
     static RegFBController* m_intance;
 
     QTimer m_checkScreenTimer;
     int m_currentScreenID;
-
 signals:
     void currentScreenChange();
 

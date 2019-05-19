@@ -146,8 +146,8 @@ void RegMailController::onCurrentActivityChanged()
            APP_MAIN->getCurrentActivity() == NONE_SCREEN)
         {
             if(this->getEmailInfor().captcha != ""){
-                this->saveEmailToOutput();
-                this->setUserInforToReg();
+//                this->saveEmailToOutput();
+//                this->setUserInforToReg();
                 APP_MAIN->setCurrentExcuteStep(AppEnums::E_EXCUTE_REG_FACBOOK);
                 emit APP_MAIN->currentActivityChanged();
             }else{
