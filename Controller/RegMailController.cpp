@@ -98,11 +98,13 @@ void RegMailController::readInforFromFile()
 void RegMailController::setUserInforToReg()
 {
     LOG;
-    QStringList specialCharList = QStringList() << "#" << "@" << "!" << "*" << "%" << "$";
     m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length()));
     m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length()));
-    m_userInfor.userName = m_userInfor.firstName + m_userInfor.lastName + QString::number(rand() % 100000000000 + 10000000);
-    m_userInfor.password = m_userInfor.firstName + m_userInfor.lastName + specialCharList.at(rand() % (specialCharList.length())) + QString::number(rand() % 10000000 + 1000000);
+    m_userInfor.userName = m_userInfor.firstName + m_userInfor.lastName + QString::number(rand() % 100000000 + 1000000);
+    m_userInfor.password = /*m_userInfor.firstName + */m_userInfor.lastName + QString::number(rand() % 3000 + 100);
+    while (m_userInfor.password.length() < 8) {
+        m_userInfor.password = m_userInfor.firstName /*+ m_userInfor.lastName*/ + QString::number(rand() % 3000 + 100);
+    }
     m_userInfor.captcha = "";
     LOG << QString("[%1][%2][%3][%4]").arg(m_userInfor.firstName)\
                                         .arg(m_userInfor.lastName)\
@@ -214,11 +216,17 @@ void RegMailController::onCurrentActivityChanged()
             }
 
         }else if(ADBCommand::currentActivity() == SYNC_INTRO_SCREEN){
-            if(!ADBCommand::findAndClick(NEXT_YOURNAME_ICON)){
-                LOG << "Couldn't click NEXT CAPTCHA";
-                this->getEmailInfor().captcha = "";
-                ADBCommand::goHomeScreen();
+            delay(500);
+            if(ADBCommand::currentActivity() == SYNC_INTRO_SCREEN){
+                if(!ADBCommand::findAndClick(NEXT_YOURNAME_ICON)){
+                    LOG << "Couldn't click NEXT CAPTCHA";
+                    this->getEmailInfor().captcha = "";
+                    ADBCommand::goHomeScreen();
+                }
             }
+        }else if(ADBCommand::currentActivity() == WIFI_PICKER_SCREEN){
+            LOG << "Back when current screen is wifi setting";
+            ADBCommand::pressBack();
         }
     }
 }

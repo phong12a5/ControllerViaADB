@@ -32,7 +32,7 @@ void RegFBController::clearCacheFBLite()
 {
     LOG;
     this->setCurrentScreen(-1);
-    ADBCommand::clearCacheOfPackage(FBLITE_PKG);
+//    ADBCommand::clearCacheOfPackage(FBLITE_PKG);
 }
 
 EMAI_INFOR &RegFBController::getUserInfo()
@@ -240,14 +240,14 @@ void RegFBController::onCurrentActivityChanged()
 
 void RegFBController::onCheckCurrentScreen()
 {
-    LOG;
+    LOG << "currentScreen(): " << this->currentScreen();
     switch (this->currentScreen()) {
     case -1:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_LOGIN)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_LOGIN);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_LOGIN:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB)){
@@ -320,7 +320,15 @@ void RegFBController::onCheckCurrentScreen()
             this->setCurrentScreen(this->findCurrentScreen());
         }
         break;
+    case AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS:
+        if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS)){
+            this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS);
+        }else{
+            this->setCurrentScreen(this->findCurrentScreen());
+        }
+        break;
     default:
+        this->setCurrentScreen(this->findCurrentScreen());
         break;
     }
 }

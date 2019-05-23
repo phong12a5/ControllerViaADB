@@ -57,6 +57,14 @@ bool ADBCommand::goHomeScreen()
     }
 }
 
+void ADBCommand::pressBack()
+{
+    LOG;
+    QProcess proc;
+    proc.start(QString("adb shell input keyevent KEYCODE_BACK"));
+    proc.waitForFinished(-1);
+}
+
 bool ADBCommand::requestShowAppDirectly(QString activity)
 {
     LOG << "acivity: " << activity;
@@ -75,8 +83,14 @@ bool ADBCommand::enterText(QString text)
 {
     LOG << "Entering text: " << text;
     QProcess proc;
+//    for(int i = 0; i < text.length(); i++){
+//        proc.start(QString("adb shell input text %1").arg(text.at(i)));
+//        delay(10);
+//        proc.waitForFinished(-1);
+//    }
     proc.start(QString("adb shell input text %1").arg(text));
     proc.waitForFinished(-1);
+
     if(proc.readAllStandardError() != ""){
         LOG << "ERROR: " << proc.readAllStandardError();
         return false;

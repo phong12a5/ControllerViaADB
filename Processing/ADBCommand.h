@@ -18,6 +18,7 @@ public:
     static void swipeScreen(QPoint sourcePoint, QPoint desPoint);
     static bool requestShowApp(QString packageName, QString activity);
     static bool goHomeScreen();
+    static void pressBack();
     static bool requestShowAppDirectly(QString activity);
     static bool enterText(QString text);
     static bool pressTap();

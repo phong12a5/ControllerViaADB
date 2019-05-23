@@ -62,7 +62,7 @@ QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QS
             break;
     }
 
-//    LOG << "Return values: " << retVal << " --- bestMaxVal: " << bestMaxval;
+    LOG << "Return values: " << retVal << " --- bestMaxVal: " << bestMaxval;
     return retVal;
 }
 

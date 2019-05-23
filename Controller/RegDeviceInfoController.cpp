@@ -35,13 +35,9 @@ void RegDeviceInfoController::onCurrentActivityChanged()
             ADBCommand::requestShowApp(XGAME_PKG,XGAME_ACTIVITYMAIN);
         }
         else if(APP_MAIN->getCurrentActivity() == XGAME_SCREEN){
-            if(ADBCommand::findAndClick(AUTO_CHANGE_ICON)){
-                delay(8000);
-                // reboot device]
+            while(!ADBCommand::findAndClick(AUTO_CHANGE_ICON));
+                delay(10000);
                 emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),0);
-            }else{
-                ADBCommand::goHomeScreen();
-            }
         }else {
             LOG << "Don't handle with screen: " << APP_MAIN->getCurrentActivity();
         }
