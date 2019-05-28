@@ -266,9 +266,5 @@ void ADBCommand::clearCacheOfPackage(QString packagName)
     QProcess proc;
     proc.start(QString("adb shell pm clear %1").arg(packagName));
     proc.waitForFinished(-1);
-}
-
-void ADBCommand::wipeData()
-{
-    LOG << "[ADBCommand]";
+    LOG << proc.readAllStandardOutput();
 }

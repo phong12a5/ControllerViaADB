@@ -32,7 +32,6 @@ public:
     static bool findAndClick(QString iconPath);
     static void wakeUpScreen();
     static void clearCacheOfPackage(QString packagName);
-    static void wipeData();
 };
 
 #endif // ADBCOMMAND_H

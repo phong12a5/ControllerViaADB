@@ -36,6 +36,7 @@ typedef struct birthday_struct{
 
 } BIRTHDAY_STRUCT;
 
+
 #define LOG qDebug() << "[" << __FUNCTION__ << "]"
 
 #define delay(milescond)    QTest::qSleep(milescond)
@@ -54,6 +55,16 @@ typedef struct birthday_struct{
 
 #define FBLITE_PKG              "com.facebook.lite"
 #define FBLITE_ACTIVITYMAIN     ".MainActivity"
+
+#define GG_BACKUP_TRANSPORT     "com.google.android.backuptransport"
+#define GG_PLUS                 "com.google.android.apps.plus"
+#define GG_SERVICE_FRAMEWORK    "com.google.android.gsf"
+#define GG_PLAY_SERVICE         "com.google.android.gms"
+#define GG_PARTNER_SETUP        "com.google.android.partnersetup"
+#define GG_CHROME               "com.android.chrome"
+#define GG_ACCOUNT_MANAGER      "com.google.android.gsf.login"
+#define LOCATION_SERVICES       "com.qualcomm.location"
+#define GOOGLE_PLAY_STORE       "com.android.vending"
 
 
 // GOOGLE SETTING icons

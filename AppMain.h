@@ -10,6 +10,7 @@
 #include "Controller/RegDeviceInfoController.h"
 #include "Controller/RegFBController.h"
 #include "Processing/ADBCommand.h"
+#include "AppModel.h"
 
 class AppMain : public QObject
 {
@@ -21,9 +22,11 @@ private:
 public:
     static AppMain *instance();
 
+private:
+    void wipeData();
+
 public:
     void initApplication();
-    void startProgram();
     void restartProgram();
 
     // Property
@@ -52,6 +55,8 @@ signals:
 public slots:
     void onUpdateCurrentActivity();
     void onProcessFinished(int currentStep, int exitCode);
+    void startProgram();
+    void closeProgram();
 };
 
 #endif // APPMAIN_H

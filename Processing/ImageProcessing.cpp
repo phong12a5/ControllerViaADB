@@ -7,7 +7,7 @@ ImageProcessing::ImageProcessing(QObject *parent) : QObject(parent)
 
 QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QString &largeImagePath)
 {
-    LOG << "[ImageProcessing]"  << smallImagePath.split("/").last() << largeImagePath.split("/").last();
+//    LOG << "[ImageProcessing]"  << smallImagePath.split("/").last() << largeImagePath.split("/").last();
 
     QPoint retVal;
 

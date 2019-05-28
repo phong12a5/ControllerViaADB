@@ -52,6 +52,20 @@ public:
         E_FBLITE_SCREEN_ID_CHECK_POINT,
         E_FBLITE_SCREEN_ID_UNKNOW
     };
+
+    enum E_APP_ID: int
+    {
+        E_FACEBOOK_LITE = 0,
+        E_GOOGLE_BACKUP_TRANSPORT,
+        E_GOOGLE_PLUS,
+        E_GOOGLE_SERVICE_FRAMEWORK,
+        E_GOOGLE_PLAY_SERVICE,
+        E_GOOGLE_PARTNER_SETUP,
+        E_GOOGLE_CHROME,
+        E_GOOGLE_ACCOUNT_MANAGER,
+        E_LOCATION_SERVICES,
+        E_GOOGLE_PLAY_STORE,
+    };
 };
 
 #endif // APPENUMS_H

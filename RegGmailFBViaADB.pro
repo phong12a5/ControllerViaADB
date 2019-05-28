@@ -1,7 +1,7 @@
 QT += quick
 QT += testlib
 
-CONFIG += c++11 congsole
+CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -24,7 +24,8 @@ HEADERS += \
     Processing/HttpRequestController.h \
     Controller/RegDeviceInfoController.h \
     Controller/RegFBController.h \
-    Controller/RegMailController.h
+    Controller/RegMailController.h \
+    AppModel.h
 
 SOURCES += \
         main.cpp \
@@ -34,7 +35,8 @@ SOURCES += \
     Processing/HttpRequestController.cpp \
     Controller/RegDeviceInfoController.cpp \
     Controller/RegFBController.cpp \
-    Controller/RegMailController.cpp
+    Controller/RegMailController.cpp \
+    AppModel.cpp
 
 RESOURCES +=
 
@@ -48,6 +50,8 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += qml.qrc
 
 
 INCLUDEPATH += "$$_PRO_FILE_PWD_/../OpenCV-Library/install/include"

@@ -1,6 +1,6 @@
 #include "AppMain.h"
 
-#define MODEL Model::instance()
+#define APP_MODEL           AppModel::instance()
 #define REG_MAIL_CTR        RegMailController::instance()
 #define REG_DEVICE_INFO_CTR RegDeviceInfoController::instance()
 #define REG_FBACC_CTR       RegFBController::instance()
@@ -23,9 +23,23 @@ AppMain *AppMain::instance()
     return m_instance;
 }
 
+void AppMain::wipeData()
+{
+    LOG << "[AppMain]";
+    for(int i = 0; i < APP_MODEL->appDataList().length(); i++){
+        APP_DATA* app = dynamic_cast<APP_DATA*>(APP_MODEL->appDataList().at(i));
+        if(app != nullptr && app->checkedState()){
+            ADBCommand::clearCacheOfPackage(app->packageName());
+        }else{
+            // Do nothing
+        }
+    }
+}
+
 void AppMain::initApplication()
 {
     LOG << "[AppMain]";
+
     REG_DEVICE_INFO_CTR->initRegDeviceInfoController();
     REG_MAIL_CTR->initRegMailController();
     REG_FBACC_CTR->initRegFBController();
@@ -35,6 +49,8 @@ void AppMain::initApplication()
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_DEVICE_INFO_CTR,   SLOT(onCurrentActivityChanged()));
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_MAIL_CTR,          SLOT(onCurrentActivityChanged()));
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_FBACC_CTR,         SLOT(onCurrentActivityChanged()));
+    QObject::connect(APP_MODEL, SIGNAL(signalStartProgram()), this, SLOT(startProgram()));
+    QObject::connect(APP_MODEL, SIGNAL(signalCloseProgram()), this, SLOT(closeProgram()));
 }
 
 void AppMain::startProgram()
@@ -44,13 +60,15 @@ void AppMain::startProgram()
     m_updateCurrActTimer.start();
 }
 
+void AppMain::closeProgram()
+{
+    LOG << "AppMain";
+}
+
 void AppMain::restartProgram()
 {
-    ADBCommand::killSpecificApp(SETTING_PKG);
-//    ADBCommand::killSpecificApp(XGAME_PKG);
-    ADBCommand::killSpecificApp(FBLITE_PKG);
-
-    ADBCommand::clearCacheOfPackage(FBLITE_PKG);
+    LOG << "AppMain";
+    this->wipeData();
     ADBCommand::goHomeScreen();
 }
 
