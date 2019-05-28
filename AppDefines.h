@@ -8,14 +8,16 @@ typedef struct email_infor{
     QString firstName;
     QString lastName;
     QString userName;
-    QString password;
+    QString gmailPassword;
+    QString fbPassword;
     QString captcha;
 
     email_infor(){
        firstName = "";
        lastName = "";
        userName = "";
-       password = "";
+       gmailPassword = "";
+       fbPassword = "";
        captcha = "";
     }
 
@@ -34,7 +36,7 @@ typedef struct birthday_struct{
 
 } BIRTHDAY_STRUCT;
 
-#define LOG qDebug() << "[" << __FUNCTION__ << "][" << __LINE__ << "] >>"
+#define LOG qDebug() << "[" << __FUNCTION__ << "]"
 
 #define delay(milescond)    QTest::qSleep(milescond)
 
@@ -61,6 +63,7 @@ typedef struct birthday_struct{
 #define NEXT_YOURNAME_ICON      "/IconImage/NextYourNameIcon.png"
 #define NOT_NOW_ICON            "/IconImage/notNowIcon.png"
 #define ACCEPT_BY_ME_ICON       "/IconImage/acceptByMe.png"
+#define SKIP_PAYMENT_ICON       "/IconImage/skipPaymentIcon.png"
 
 // FACEBOOK LITE icons
 #define CREATE_NEW_FBACC_ICON   "/IconImage/createNewAccIcon.png"

@@ -14,7 +14,7 @@ class ADBCommand : public QObject
 public:
 
     static QString screenShot(QString fileName = "screen.png", QString path = QDir::currentPath());
-    static void tapScreen(QPoint point);
+    static void tapScreen(QPoint point, bool noDelay = false);
     static void swipeScreen(QPoint sourcePoint, QPoint desPoint);
     static bool requestShowApp(QString packageName, QString activity);
     static bool goHomeScreen();
@@ -32,6 +32,7 @@ public:
     static bool findAndClick(QString iconPath);
     static void wakeUpScreen();
     static void clearCacheOfPackage(QString packagName);
+    static void wipeData();
 };
 
 #endif // ADBCOMMAND_H

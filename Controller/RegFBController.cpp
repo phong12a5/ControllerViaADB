@@ -20,7 +20,7 @@ RegFBController *RegFBController::instance()
 
 void RegFBController::initRegFBController()
 {
-    LOG;
+    LOG << "[RegFBController]";
     m_checkScreenTimer.setInterval(100);
     m_checkScreenTimer.setSingleShot(false);
 
@@ -30,8 +30,7 @@ void RegFBController::initRegFBController()
 
 void RegFBController::clearCacheFBLite()
 {
-    LOG;
-    this->setCurrentScreen(-1);
+    LOG << "[RegFBController]";
 //    ADBCommand::clearCacheOfPackage(FBLITE_PKG);
 }
 
@@ -43,12 +42,7 @@ EMAI_INFOR &RegFBController::getUserInfo()
 void RegFBController::setUserInfo(EMAI_INFOR userInfor)
 {
     m_userInfo = userInfor;
-}
-
-void RegFBController::saveAccInforToOutput()
-{
-    LOG << getUserInfo().userName;
-}
+ }
 
 int RegFBController::currentScreen() const
 {
@@ -58,7 +52,7 @@ int RegFBController::currentScreen() const
 void RegFBController::setCurrentScreen(const int screenID)
 {
     if(m_currentScreenID != screenID){
-        LOG << screenID;
+        LOG << "[RegFBController]" << screenID;
         m_currentScreenID = screenID;
         emit currentScreenChange();
     }
@@ -109,14 +103,14 @@ bool RegFBController::isCurrentScreen(int screenID) const
         break;
     }
 
-    LOG << "screenID: " << screenID << " --- reval:" << retVal;
+    LOG << "[RegFBController]" << "screenID: " << screenID << " --- reval:" << retVal;
 
     return retVal;
 }
 
 int RegFBController::findCurrentScreen() const
 {
-    LOG;
+    LOG << "[RegFBController]";
     if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_LOGIN))                     return AppEnums::E_FBLITE_SCREEN_ID_LOGIN;
     else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB))              return AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB;
     else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME))           return AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME;
@@ -131,7 +125,7 @@ int RegFBController::findCurrentScreen() const
     else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS))         return AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS;
     else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS))            return AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS;
     else if(isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_CHECK_POINT))          return AppEnums::E_FBLITE_SCREEN_ID_CHECK_POINT;
-    else return -1;
+    else return AppEnums::E_FBLITE_SCREEN_ID_UNKNOW;
 }
 
 int RegFBController::getGenderRandomly() const
@@ -142,7 +136,7 @@ int RegFBController::getGenderRandomly() const
 void RegFBController::pressKeyBoard(int number)
 {
     if(number <0){
-        LOG << "Invalid number: " << number;
+        LOG << "[RegFBController]" << "Invalid number: " << number;
         return;
     }
     QPoint keyboard = ADBCommand::findAnImageOnScreen(KEYBOARD);
@@ -204,7 +198,7 @@ BIRTHDAY_STRUCT RegFBController::getRandomBirthday()
 
 void RegFBController::enterBirthDay()
 {
-    LOG;
+    LOG << "[RegFBController]";
     QPoint birthDayField = ADBCommand::findAnImageOnScreen(BIRTH_DAY_FIELD);
     if(!birthDayField.isNull()){
         // CLICK MONTH FIELD
@@ -221,14 +215,15 @@ void RegFBController::enterBirthDay()
 
 void RegFBController::onCurrentActivityChanged()
 {
-    LOG << "[RegFBController]";
     if(APP_MAIN->currentExcuteStep() == AppEnums::E_EXCUTE_REG_FACBOOK){
         // Handle when currentExcuteStep = E_EXCUTE_REG_GMAIL
+        LOG << "[RegFBController]" << APP_MAIN->getCurrentActivity();
         if(APP_MAIN->getCurrentActivity() == HOME_SCREEN ||
                 APP_MAIN->getCurrentActivity() == NONE_SCREEN)
         {
-            this->clearCacheFBLite();
-            LOG << "Reqest to go to Facebook Lite application";
+//            this->clearCacheFBLite();
+            this->setCurrentScreen(-1);
+            LOG << "[RegFBController]" << "Reqest to go to Facebook Lite application";
             ADBCommand::requestShowApp(FBLITE_PKG,FBLITE_ACTIVITYMAIN);
         }else if(APP_MAIN->getCurrentActivity() == FACEBOOK_LITE_SCREEN){
             m_checkScreenTimer.start();
@@ -240,14 +235,16 @@ void RegFBController::onCurrentActivityChanged()
 
 void RegFBController::onCheckCurrentScreen()
 {
-    LOG << "currentScreen(): " << this->currentScreen();
+    LOG << "[RegFBController]" << "currentScreen(): " << this->currentScreen();
+    if(APP_MAIN->currentExcuteStep() != AppEnums::E_EXCUTE_REG_FACBOOK){
+        ADBCommand::goHomeScreen();
+        return;
+    }
     switch (this->currentScreen()) {
     case -1:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_LOGIN)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_LOGIN);
-        }/*else{
-            this->setCurrentScreen(this->findCurrentScreen());
-        }*/
+        }
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_LOGIN:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB)){
@@ -335,7 +332,7 @@ void RegFBController::onCheckCurrentScreen()
 
 void RegFBController::onUpdateAction()
 {
-    LOG << "current screen: " << this->currentScreen();
+    LOG << "[RegFBController]" << "current screen: " << this->currentScreen();
     if(APP_MAIN->currentExcuteStep() != AppEnums::E_EXCUTE_REG_FACBOOK)
         return;
 
@@ -348,9 +345,19 @@ void RegFBController::onUpdateAction()
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME:
         ADBCommand::findAndClick(FIRSTNAME_FIELD);
+#ifdef USE_KEYBOARD
+        delay(1000);
+        this->inputPassWordByKeyBoard(getUserInfo().firstName);
+#else
         ADBCommand::enterText(getUserInfo().firstName);
+#endif
         ADBCommand::findAndClick(LASTNAME_FIELD);
+#ifdef USE_KEYBOARD
+        delay(1000);
+        this->inputPassWordByKeyBoard(getUserInfo().lastName);
+#else
         ADBCommand::enterText(getUserInfo().lastName);
+#endif
         ADBCommand::findAndClick(NEXT_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM:
@@ -377,7 +384,12 @@ void RegFBController::onUpdateAction()
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD:
         ADBCommand::findAndClick(PASSWORD_FIELD);
-        ADBCommand::enterText(getUserInfo().password);
+#ifdef USE_KEYBOARD
+        delay(1000);
+        this->inputPassWordByKeyBoard(getUserInfo().fbPassword);
+#else
+        ADBCommand::enterText(getUserInfo().fbPassword);
+#endif
         ADBCommand::findAndClick(SIGN_UP_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO:
@@ -395,5 +407,40 @@ void RegFBController::onUpdateAction()
     case AppEnums::E_FBLITE_SCREEN_ID_CHECK_POINT:
         emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),1);
         break;
+    }
+}
+
+void RegFBController::inputPassWordByKeyBoard(QString inputText)
+{
+    QMap<QString, QPoint> mapKeyboard;
+    mapKeyboard["q"] = QPoint(55,1197);
+    mapKeyboard["w"] = QPoint(161,1197);
+    mapKeyboard["e"] = QPoint(267,1197);
+    mapKeyboard["r"] = QPoint(380,1197);
+    mapKeyboard["t"] = QPoint(488,1197);
+    mapKeyboard["y"] = QPoint(595,1197);
+    mapKeyboard["u"] = QPoint(703,1197);
+    mapKeyboard["i"] = QPoint(809,1197);
+    mapKeyboard["o"] = QPoint(917,1197);
+    mapKeyboard["p"] = QPoint(1028,1197);
+    mapKeyboard["a"] = QPoint(111,1357);
+    mapKeyboard["s"] = QPoint(213,1357);
+    mapKeyboard["d"] = QPoint(329,1357);
+    mapKeyboard["f"] = QPoint(428,1357);
+    mapKeyboard["g"] = QPoint(540,1357);
+    mapKeyboard["h"] = QPoint(650,1357);
+    mapKeyboard["j"] = QPoint(755,1357);
+    mapKeyboard["k"] = QPoint(865,1357);
+    mapKeyboard["l"] = QPoint(972,1357);
+    mapKeyboard["z"] = QPoint(251,1521);
+    mapKeyboard["x"] = QPoint(341,1521);
+    mapKeyboard["c"] = QPoint(443,1521);
+    mapKeyboard["v"] = QPoint(543,1521);
+    mapKeyboard["b"] = QPoint(654,1521);
+    mapKeyboard["n"] = QPoint(737,1521);
+    mapKeyboard["m"] = QPoint(837,1521);
+
+    for (int i = 0; i < inputText.length(); i++) {
+        ADBCommand::tapScreen(mapKeyboard.value(inputText.at(i)));
     }
 }

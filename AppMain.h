@@ -24,10 +24,14 @@ public:
 public:
     void initApplication();
     void startProgram();
+    void restartProgram();
 
     // Property
     QString getCurrentActivity();
     void setCurrentActivity(QString _activity);
+
+    QString getCurrentPackage();
+    void setCurrentPackage(QString _package);
 
     AppEnums::E_EXCUTE_STEPS currentExcuteStep();
     void setCurrentExcuteStep(AppEnums::E_EXCUTE_STEPS step);
@@ -37,6 +41,7 @@ private:
 
 private:
     QString m_currentActivity;
+    QString m_currentPackage;
     QTimer m_updateCurrActTimer;
     AppEnums::E_EXCUTE_STEPS m_currentExcuteStep;
 

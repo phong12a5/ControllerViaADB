@@ -25,21 +25,22 @@ void RegDeviceInfoController::initRegDeviceInfoController()
 
 void RegDeviceInfoController::onCurrentActivityChanged()
 {
-    LOG << "[RegDeviceInfoController]";
     if(APP_MAIN->currentExcuteStep() == AppEnums::E_EXCUTE_CHANGE_INFO){
         // Handle when currentExcuteStep = E_EXCUTE_CHANGE_INFO
+        LOG << "[RegDeviceInfoController]" << APP_MAIN->getCurrentActivity();
         if(APP_MAIN->getCurrentActivity() == HOME_SCREEN ||
            APP_MAIN->getCurrentActivity() == NONE_SCREEN)
         {
-            LOG << "Reqest to go to XGame application";
+            LOG << "[RegDeviceInfoController]" << "Reqest to go to XGame application";
             ADBCommand::requestShowApp(XGAME_PKG,XGAME_ACTIVITYMAIN);
         }
         else if(APP_MAIN->getCurrentActivity() == XGAME_SCREEN){
             while(!ADBCommand::findAndClick(AUTO_CHANGE_ICON));
-                delay(10000);
-                emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),0);
+            delay(10000);
+            emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),0);
         }else {
-            LOG << "Don't handle with screen: " << APP_MAIN->getCurrentActivity();
+            LOG << "[RegDeviceInfoController]" << "Don't handle with screen: " << APP_MAIN->getCurrentActivity();
+            ADBCommand::goHomeScreen();
         }
     }
 }

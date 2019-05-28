@@ -2,7 +2,7 @@
 
 QString ADBCommand::screenShot(QString fileName, QString path)
 {
-//    LOG << "Path: " << path  << " --- FileName: " << fileName;
+//    LOG << "[ADBCommand]" << "Path: " << path  << " --- FileName: " << fileName;
     QProcess proc;
     proc.start(QString("adb shell screencap -p %1screen.png").arg(IMAGE_FOLDER));
     proc.waitForFinished(-1);
@@ -13,7 +13,7 @@ QString ADBCommand::screenShot(QString fileName, QString path)
 
 void ADBCommand::swipeScreen(QPoint sourcePoint, QPoint desPoint)
 {
-    LOG << "Swiping from " << sourcePoint << " to" << desPoint;
+    LOG << "[ADBCommand]" << "Swiping from " << sourcePoint << " to" << desPoint;
     QProcess proc;
     proc.start(QString("adb shell input swipe %1 %2 %3 %4")\
                .arg(sourcePoint.x())\
@@ -26,12 +26,12 @@ void ADBCommand::swipeScreen(QPoint sourcePoint, QPoint desPoint)
 
 bool ADBCommand::requestShowApp(QString packageName, QString activity)
 {
-    LOG << "packageName: " << packageName << " --- activity: " << activity;
+    LOG << "[ADBCommand]" << "packageName: " << packageName << " --- activity: " << activity;
     QProcess proc;
     proc.start(QString("adb shell am start -n %1/%2").arg(packageName).arg(activity));
     proc.waitForFinished(-1);
     if(proc.readAllStandardError() != ""){
-        LOG << "ERROR: " << proc.readAllStandardError();
+        LOG << "[ADBCommand]" << "ERROR: " << proc.readAllStandardError();
         return false;
     }else {
         return true;
@@ -40,17 +40,13 @@ bool ADBCommand::requestShowApp(QString packageName, QString activity)
 
 bool ADBCommand::goHomeScreen()
 {
-    LOG;
-    killSpecificApp(SETTING_PKG);
-    killSpecificApp(XGAME_PKG);
-    killSpecificApp(FBLITE_PKG);
-
+    LOG << "[ADBCommand]";
     QProcess proc;
     proc.start(QString("adb shell input keyevent KEYCODE_HOME"));
     proc.waitForFinished(-1);
     delay(100);
     if(proc.readAllStandardError() != ""){
-        LOG << "ERROR: " << proc.readAllStandardError();
+        LOG << "[ADBCommand]" << "ERROR: " << proc.readAllStandardError();
         return false;
     }else {
         return true;
@@ -59,7 +55,7 @@ bool ADBCommand::goHomeScreen()
 
 void ADBCommand::pressBack()
 {
-    LOG;
+    LOG << "[ADBCommand]";
     QProcess proc;
     proc.start(QString("adb shell input keyevent KEYCODE_BACK"));
     proc.waitForFinished(-1);
@@ -67,12 +63,12 @@ void ADBCommand::pressBack()
 
 bool ADBCommand::requestShowAppDirectly(QString activity)
 {
-    LOG << "acivity: " << activity;
+    LOG << "[ADBCommand]" << "acivity: " << activity;
     QProcess proc;
     proc.start(QString("adb shell am start -a %1").arg(activity));
     proc.waitForFinished(-1);
     if(proc.readAllStandardError() != ""){
-        LOG << "ERROR: " << proc.readAllStandardError();
+        LOG << "[ADBCommand]" << "ERROR: " << proc.readAllStandardError();
         return false;
     }else {
         return true;
@@ -81,7 +77,7 @@ bool ADBCommand::requestShowAppDirectly(QString activity)
 
 bool ADBCommand::enterText(QString text)
 {
-    LOG << "Entering text: " << text;
+    LOG << "[ADBCommand]" << "Entering text: " << text;
     QProcess proc;
 //    for(int i = 0; i < text.length(); i++){
 //        proc.start(QString("adb shell input text %1").arg(text.at(i)));
@@ -92,7 +88,7 @@ bool ADBCommand::enterText(QString text)
     proc.waitForFinished(-1);
 
     if(proc.readAllStandardError() != ""){
-        LOG << "ERROR: " << proc.readAllStandardError();
+        LOG << "[ADBCommand]" << "ERROR: " << proc.readAllStandardError();
         return false;
     }else {
         return true;
@@ -101,12 +97,12 @@ bool ADBCommand::enterText(QString text)
 
 bool ADBCommand::pressTap()
 {
-    LOG << "Pressing Tap Key ...";
+    LOG << "[ADBCommand]" << "Pressing Tap Key ...";
     QProcess proc;
     proc.start(QString("adb shell input keyevent KEYCODE_TAB"));
     proc.waitForFinished(-1);
     if(proc.readAllStandardError() != ""){
-        LOG << "ERROR: " << proc.readAllStandardError();
+        LOG << "[ADBCommand]" << "ERROR: " << proc.readAllStandardError();
         return false;
     }else {
         return true;
@@ -115,12 +111,12 @@ bool ADBCommand::pressTap()
 
 bool ADBCommand::rebootDevice()
 {
-    LOG;
+    LOG << "[ADBCommand]";
     QProcess proc;
     proc.start(QString("adb shell reboot"));
     proc.waitForFinished(-1);
     if(proc.readAllStandardError() != ""){
-        LOG << "ERROR: " << proc.readAllStandardError();
+        LOG << "[ADBCommand]" << "ERROR: " << proc.readAllStandardError();
         return false;
     }else {
         return true;
@@ -133,7 +129,7 @@ bool ADBCommand::checkConnection()
     proc.start(QString("adb devices"));
     proc.waitForFinished(-1);
     if(proc.readAllStandardError() != ""){
-        LOG << "ERROR: " << proc.readAllStandardError();
+        LOG << "[ADBCommand]" << "ERROR: " << proc.readAllStandardError();
         return false;
     }else {
         QString output = proc.readAllStandardOutput();
@@ -147,7 +143,7 @@ bool ADBCommand::checkConnection()
         if(output != ""){
             return true;
         }else {
-            LOG << "There is no device is connected!";
+            LOG << "[ADBCommand]" << "There is no device is connected!";
             return false;
         }
     }
@@ -155,7 +151,7 @@ bool ADBCommand::checkConnection()
 
 bool ADBCommand::customCommand(QString cmd)
 {
-    LOG << "Cmd: " << cmd;
+    LOG << "[ADBCommand]" << "Cmd: " << cmd;
     bool retVal = true;
     return retVal;
 }
@@ -188,7 +184,7 @@ QString ADBCommand::currentActivity()
 
 void ADBCommand::killSpecificApp(QString packageName)
 {
-    LOG << "Killing " << packageName;
+    LOG << "[ADBCommand]" << "Killing " << packageName;
     QProcess proc;
     proc.start(QString("adb shell am force-stop %1").arg(packageName));
     proc.waitForFinished(-1);
@@ -224,18 +220,20 @@ QPoint ADBCommand::findAnImageOnScreen(QString iconPath)
     return  point;
 }
 
-void ADBCommand::tapScreen(QPoint point)
+void ADBCommand::tapScreen(QPoint point, bool noDelay)
 {
-    LOG << "Tapping at [" << point.x() << "," << point.y() << "]";
+    LOG << "[ADBCommand]" << "Tapping at [" << point.x() << "," << point.y() << "]";
     QProcess proc;
     proc.start(QString("adb shell input tap %1 %2").arg(point.x()).arg(point.y()));
     proc.waitForFinished(-1);
-    delay(100);
+    if(!noDelay)
+        delay(100);
     return;
 }
 
 bool ADBCommand::findAndClick(QString iconPath)
 {
+    LOG << "[ADBCommand]" << iconPath;
     QString screenImgPath = ADBCommand::screenShot();
     QPoint point = ImageProcessing::findImageOnImage(QDir::currentPath() + iconPath,screenImgPath);
     if(!point.isNull()){
@@ -255,7 +253,7 @@ bool ADBCommand::findAndClick(QString iconPath)
 
 void ADBCommand::wakeUpScreen()
 {
-        LOG;
+        LOG << "[ADBCommand]";
         QProcess proc;
         proc.start("adb shell input keyevent KEYCODE_POWER");
         proc.waitForFinished(-1);
@@ -264,7 +262,13 @@ void ADBCommand::wakeUpScreen()
 
 void ADBCommand::clearCacheOfPackage(QString packagName)
 {
+    LOG << "[ADBCommand]" << packagName;
     QProcess proc;
     proc.start(QString("adb shell pm clear %1").arg(packagName));
     proc.waitForFinished(-1);
+}
+
+void ADBCommand::wipeData()
+{
+    LOG << "[ADBCommand]";
 }

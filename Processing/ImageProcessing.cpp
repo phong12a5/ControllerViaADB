@@ -7,13 +7,12 @@ ImageProcessing::ImageProcessing(QObject *parent) : QObject(parent)
 
 QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QString &largeImagePath)
 {
-//    LOG << "smallImage: " << smallImagePath;
-//    LOG << "largeImage: " << largeImagePath;
+    LOG << "[ImageProcessing]"  << smallImagePath.split("/").last() << largeImagePath.split("/").last();
 
     QPoint retVal;
 
-//    LOG << "Small image: " << QImage(smallImagePath).size();
-//    LOG << "Large image: " << QImage(largeImagePath).size();
+//    LOG << "[ImageProcessing]" << "Small image: " << QImage(smallImagePath).size();
+//    LOG << "[ImageProcessing]" << "Large image: " << QImage(largeImagePath).size();
 
     cv::Mat _smallImage = cv::imread(smallImagePath.toUtf8().constData());
     cv::Mat _largeImage = cv::imread(largeImagePath.toUtf8().constData());
@@ -21,10 +20,10 @@ QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QS
     //kiểm tra kích cỡ của ảnh input & template
     if (_smallImage.rows > _largeImage.rows || _smallImage.cols > _largeImage.cols)
     {
-        LOG << "Mat template must be smaller than matInput";
+        LOG << "[ImageProcessing]" << "Mat template must be smaller than matInput";
         return retVal;
     }else if(_smallImage.rows <= 0 || _smallImage.cols <= 0 || _largeImage.rows <= 0 || _largeImage.cols <= 0){
-        LOG << "Invalid Image";
+        LOG << "[ImageProcessing]" << "Invalid Image";
         return retVal;
     }
 
@@ -62,13 +61,13 @@ QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QS
             break;
     }
 
-    LOG << "Return values: " << retVal << " --- bestMaxVal: " << bestMaxval;
+//    LOG << "[ImageProcessing]" << "Return values: " << retVal << " --- bestMaxVal: " << bestMaxval;
     return retVal;
 }
 
 QString ImageProcessing::extractCaptchaImage(const QString &path)
 {
-    LOG << "Path: " << path;
+    LOG << "[ImageProcessing]" << "Path: " << path;
 
     cv::Mat src = cv::imread(path.toUtf8().constData());
     cv::Rect crop(58 , 473, 715, 216);
@@ -81,7 +80,7 @@ QString ImageProcessing::extractCaptchaImage(const QString &path)
     if(QFile(captImgPath).exists() && !QImage(captImgPath).isNull()){
         return captImgPath;
     }else{
-        LOG << "Couldn't extract captcha image";
+        LOG << "[ImageProcessing]" << "Couldn't extract captcha image";
         return QString("");
     }
 }

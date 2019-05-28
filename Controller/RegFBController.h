@@ -20,7 +20,6 @@ public:
     void initRegFBController();
     EMAI_INFOR &getUserInfo();
     void setUserInfo(EMAI_INFOR userInfor);
-    void saveAccInforToOutput();
 
 private:
     void clearCacheFBLite();
@@ -32,6 +31,7 @@ private:
     int getGenderRandomly() const;
     void pressKeyBoard(int number);
     BIRTHDAY_STRUCT getRandomBirthday();
+    void inputPassWordByKeyBoard(QString inputText);
 public:
     void enterBirthDay();
 private:

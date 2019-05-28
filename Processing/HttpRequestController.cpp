@@ -10,8 +10,8 @@ HttpRequestController::HttpRequestController(QObject *parent) : QObject(parent)
 
 QString HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoPath)
 {
-    LOG << "uploadUrl: " << uploadUrl;
-    LOG << "imgPath: " << photoPath;
+    LOG << "[HttpRequestController]" << "uploadUrl: " << uploadUrl;
+    LOG << "[HttpRequestController]" << "imgPath: " << photoPath;
 
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 
@@ -56,14 +56,14 @@ QString HttpRequestController::sendHttpRequest(QString uploadUrl, QString photoP
 
     if (reply->error() == QNetworkReply::NoError) {
         QStringList outputList = QString(reply->readAll()).split('|');
-        LOG << "outputList: " << outputList;
+        LOG << "[HttpRequestController]" << "outputList: " << outputList;
         if(outputList.length() > 5){
             retVal = outputList.at(5);
         }else{
             retVal = "";
         }
     } else {
-        LOG << "Failure: " <<reply->errorString();
+        LOG << "[HttpRequestController]" << "Failure: " <<reply->errorString();
         retVal = "";
     }
 
@@ -82,6 +82,6 @@ HttpRequestController *HttpRequestController::instance()
 
 HttpRequestController::~HttpRequestController()
 {
-    LOG;
+    LOG << "[HttpRequestController]";
     delete manager;
 }
