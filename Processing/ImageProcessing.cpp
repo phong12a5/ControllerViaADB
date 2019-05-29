@@ -13,7 +13,7 @@ QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QS
 
 //    LOG << "[ImageProcessing]" << "Small image: " << QImage(smallImagePath).size();
 //    LOG << "[ImageProcessing]" << "Large image: " << QImage(largeImagePath).size();
-#if 0
+#ifdef USE_OPENCV
 
     cv::Mat _smallImage = cv::imread(smallImagePath.toUtf8().constData());
     cv::Mat _largeImage = cv::imread(largeImagePath.toUtf8().constData());
@@ -71,7 +71,7 @@ QString ImageProcessing::extractCaptchaImage(const QString &path)
 {
     LOG << "[ImageProcessing]" << "Path: " << path;
 
-#if 1
+#ifndef USE_OPENCV
     return  QString("");
 #else
     cv::Mat src = cv::imread(path.toUtf8().constData());

@@ -39,21 +39,25 @@ void AppMain::wipeData()
 void AppMain::loadConfig()
 {
     LOG << "[AppMain]";
-    QJsonObject config = this->loadJson(CONFIG_FILE_NAME).object();
-    APP_MODEL->setSaveToLocal(config[SAVE_LOCAL_FIELD].toBool());
-    APP_MODEL->setSaveToServer(config[SAVE_SERVER_FIELD].toBool());
-    APP_MODEL->setUseKeyboard(config[USE_KEYBOARD_FIELD].toBool());
-    QJsonObject appDataObj = config[APP_DATA_FIELD].toObject();
-    if(!appDataObj.isEmpty()){
-        QJsonObject appData;
-        for(int i = 0; i < APP_MODEL->appDataList().length(); i++){
-            APP_DATA* app = dynamic_cast<APP_DATA*>(APP_MODEL->appDataList().at(i));
-            QString packageName = app->packageName();
-            bool state = appDataObj[packageName].toBool();
-            app->setCheckedState(state);
-        }
+    if(!QFile(QDir::currentPath() + "/" + CONFIG_FILE_NAME).exists()){
+        this->saveConfig();
     }else{
-        LOG << "[AppMain]" << " appDataObj is empty";
+        QJsonObject config = this->loadJson(CONFIG_FILE_NAME).object();
+        APP_MODEL->setSaveToLocal(config[SAVE_LOCAL_FIELD].toBool());
+        APP_MODEL->setSaveToServer(config[SAVE_SERVER_FIELD].toBool());
+        APP_MODEL->setUseKeyboard(config[USE_KEYBOARD_FIELD].toBool());
+        QJsonObject appDataObj = config[APP_DATA_FIELD].toObject();
+        if(!appDataObj.isEmpty()){
+            QJsonObject appData;
+            for(int i = 0; i < APP_MODEL->appDataList().length(); i++){
+                APP_DATA* app = dynamic_cast<APP_DATA*>(APP_MODEL->appDataList().at(i));
+                QString packageName = app->packageName();
+                bool state = appDataObj[packageName].toBool();
+                app->setCheckedState(state);
+            }
+        }else{
+            LOG << "[AppMain]" << " appDataObj is empty";
+        }
     }
 }
 
@@ -121,6 +125,7 @@ void AppMain::startProgram()
 void AppMain::closeProgram()
 {
     LOG << "AppMain";
+    QCoreApplication::quit();
 }
 
 void AppMain::restartProgram()

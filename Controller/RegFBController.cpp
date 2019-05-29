@@ -2,6 +2,7 @@
 #include "AppMain.h"
 
 #define APP_MAIN        AppMain::instance()
+#define APP_MODEL       AppModel::instance()
 
 RegFBController* RegFBController::m_intance = nullptr;
 
@@ -249,80 +250,80 @@ void RegFBController::onCheckCurrentScreen()
     case AppEnums::E_FBLITE_SCREEN_ID_LOGIN:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_JOIN_FB:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_EMAIL_ADDRESS:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_BIRTHDAY:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_GENDER:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
 
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ADD_PIC_PROFILE:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_FIND_FRIENDS:
         if(this->isCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS)){
             this->setCurrentScreen(AppEnums::E_FBLITE_SCREEN_ID_NEW_FEEDS);
-        }else{
+        }/*else{
             this->setCurrentScreen(this->findCurrentScreen());
-        }
+        }*/
         break;
     default:
         this->setCurrentScreen(this->findCurrentScreen());
@@ -344,20 +345,25 @@ void RegFBController::onUpdateAction()
         ADBCommand::findAndClick(NEXT_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_NAME:
+        ////////////////
         ADBCommand::findAndClick(FIRSTNAME_FIELD);
-#ifdef USE_KEYBOARD
-        delay(1000);
-        this->inputPassWordByKeyBoard(getUserInfo().firstName);
-#else
-        ADBCommand::enterText(getUserInfo().firstName);
-#endif
+        if(APP_MODEL->useKeyboard()){
+            delay(1000);
+            this->inputPassWordByKeyBoard(getUserInfo().firstName);
+        }
+        else{
+            ADBCommand::enterText(getUserInfo().firstName);
+        }
+
+       /////////////////
         ADBCommand::findAndClick(LASTNAME_FIELD);
-#ifdef USE_KEYBOARD
-        delay(1000);
-        this->inputPassWordByKeyBoard(getUserInfo().lastName);
-#else
-        ADBCommand::enterText(getUserInfo().lastName);
-#endif
+        if(APP_MODEL->useKeyboard()){
+            delay(1000);
+            this->inputPassWordByKeyBoard(getUserInfo().lastName);
+        }else{
+            ADBCommand::enterText(getUserInfo().lastName);
+        }
+        ///////////////
         ADBCommand::findAndClick(NEXT_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_MOBILE_NUM:
@@ -384,12 +390,13 @@ void RegFBController::onUpdateAction()
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_ENTER_PASSWORD:
         ADBCommand::findAndClick(PASSWORD_FIELD);
-#ifdef USE_KEYBOARD
-        delay(1000);
-        this->inputPassWordByKeyBoard(getUserInfo().fbPassword);
-#else
-        ADBCommand::enterText(getUserInfo().fbPassword);
-#endif
+        if(APP_MODEL->useKeyboard()){
+            delay(1000);
+            this->inputPassWordByKeyBoard(getUserInfo().fbPassword);
+        }
+        else{
+            ADBCommand::enterText(getUserInfo().fbPassword);
+        }
         ADBCommand::findAndClick(SIGN_UP_BUTTON);
         break;
     case AppEnums::E_FBLITE_SCREEN_ID_SAVE_LOGIN_INFO:

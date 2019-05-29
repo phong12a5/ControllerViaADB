@@ -7,6 +7,7 @@
 #include "Processing/ADBCommand.h"
 #include "Processing/ImageProcessing.h"
 #include <QTimer>
+#include "AppModel.h"
 
 class RegFBController : public QObject
 {

@@ -24,9 +24,29 @@ AppModel::AppModel(QObject *parent) :
     m_useKeyboard(false)
 {
     m_appDataList.clear();
+    QStringList listApp;
+    listApp.clear();
     for (int i = 0; i < PACKAGE_LIST.length(); i++) {
         m_appDataList.append(new APP_DATA(PACKAGE_LIST.at(i)));
+        listApp.append(PACKAGE_LIST.at(i));
     }
+    listApp.sort();
+
+    QFile outputFile("package.txt");
+
+    if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
+        LOG << "[RegMailController]" << "Couldn't open output file";
+        return;
+    }
+
+    QTextStream out(&outputFile);
+
+    for(int i = 0; i < listApp.length(); i++){
+        out << "\"" << listApp.at(i) << "\"" << "\n";
+    }
+
+    LOG << listApp;
+
 }
 
 AppModel *AppModel::instance()

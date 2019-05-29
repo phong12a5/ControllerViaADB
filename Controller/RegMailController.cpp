@@ -2,6 +2,7 @@
 #include "AppMain.h"
 
 #define APP_MAIN        AppMain::instance()
+#define APP_MODEL       AppModel::instance()
 #define HTTP_REQUEST    HttpRequestController::instance()
 
 RegMailController* RegMailController::m_instance = nullptr;
@@ -102,37 +103,36 @@ void RegMailController::setUserInforToReg()
     LOG << "[RegMailController]";
     if(m_firstNameList.isEmpty() || m_lastNameList.isEmpty())
         return;
-#ifdef USE_KEYBOARD
-    m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length())).toLower();
-    m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length())).toLower();
-#else
-    m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length()));
-    m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length()));
-#endif
+    if(APP_MODEL->useKeyboard()){
+        m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length())).toLower();
+        m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length())).toLower();
+    }else{
+        m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length()));
+        m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length()));
+    }
     m_userInfor.userName = m_userInfor.firstName + m_userInfor.lastName + QString::number(rand() % 1000000000 + 3000000);
     m_userInfor.gmailPassword = m_userInfor.firstName + m_userInfor.lastName + QString::number(rand() % 30000 + 10000);
     m_userInfor.captcha = "";
 
-#ifdef USE_KEYBOARD
-    QStringList charList;
-    charList << "a" << "b" << "c" << "d" << "e" << "f" << "g" << "h" << "i" << "k"
-             << "l" << "m" << "n" << "o" << "p" << "r" << "s" << "t" << "x" << "y" << "z";
-    m_userInfor.fbPassword = m_userInfor.lastName + m_userInfor.firstName + charList.at(rand() % charList.length());
-    while (m_userInfor.fbPassword.length() < 8) {
-        m_userInfor.fbPassword += charList.at(rand() % charList.length());
-    }
-#else
-    QStringList charList;
-    charList << "a" << "b" << "c" << "d" << "e" << "f" << "g" << "h" << "i" << "k"
-             << "l" << "m" << "n" << "o" << "p" << "r" << "s" << "t" << "x" << "y" << "z";
-    QStringList numberList = QStringList() << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8" << "9" << "10" << "z";
+    if(APP_MODEL->useKeyboard()){
+        QStringList charList;
+        charList << "a" << "b" << "c" << "d" << "e" << "f" << "g" << "h" << "i" << "k"
+                 << "l" << "m" << "n" << "o" << "p" << "r" << "s" << "t" << "x" << "y" << "z";
+        m_userInfor.fbPassword = m_userInfor.lastName + m_userInfor.firstName + charList.at(rand() % charList.length());
+        while (m_userInfor.fbPassword.length() < 8) {
+            m_userInfor.fbPassword += charList.at(rand() % charList.length());
+        }
+    }else{
+        QStringList charList;
+        charList << "a" << "b" << "c" << "d" << "e" << "f" << "g" << "h" << "i" << "k"
+                 << "l" << "m" << "n" << "o" << "p" << "r" << "s" << "t" << "x" << "y" << "z";
+        QStringList numberList = QStringList() << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8" << "9" << "10" << "z";
 
-    m_userInfor.fbPassword = m_userInfor.firstName;
-    while (m_userInfor.fbPassword.length() < 8) {
-        m_userInfor.fbPassword += numberList.at(rand() % numberList.length());
+        m_userInfor.fbPassword = m_userInfor.firstName;
+        while (m_userInfor.fbPassword.length() < 8) {
+            m_userInfor.fbPassword += numberList.at(rand() % numberList.length());
+        }
     }
-#endif
-
     LOG << "[RegMailController]" << QString("[%1][%2][%3]").arg(m_userInfor.userName)\
                                   .arg(m_userInfor.gmailPassword)\
                                   .arg(m_userInfor.fbPassword);

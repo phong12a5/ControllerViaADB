@@ -196,6 +196,7 @@ Window {
         text: "Start"
         onReleased: {
             enableAre.visible = true
+            root.showMinimized()
             AppModel.saveSettingConfig()
             AppModel.startProgram()
         }
@@ -221,7 +222,7 @@ Window {
         anchors.bottomMargin: 20
         anchors.right: parent.right
         anchors.rightMargin: 20
-        text: "Start"
+        text: "Close"
         onReleased: {
             AppModel.closeProgram()
         }
