@@ -8,7 +8,8 @@ CONFIG += c++11
 # depend on your compiler). Refer to the documentation for the
 # deprecated API to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS \
-           USE_KEYBOARD
+           USE_KEYBOARD \
+           #USE_OPENCV
 
 # You can also make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -54,17 +55,17 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += qml.qrc
 
 
-INCLUDEPATH += "$$_PRO_FILE_PWD_/../OpenCV-Library/install/include"
+#INCLUDEPATH += "$$_PRO_FILE_PWD_/../OpenCV-Library/install/include"
 
 
-LIBS += \
-    -L"$$_PRO_FILE_PWD_/../OpenCV-Library/install/x86/mingw/lib"\
-    -lopencv_core410        \
-    -lopencv_highgui410     \
-    -lopencv_imgcodecs410   \
-    -lopencv_imgproc410     \
-    -lopencv_features2d410  \
-    -lopencv_calib3d410
+#LIBS += \
+#    -L"$$_PRO_FILE_PWD_/../OpenCV-Library/install/x86/mingw/lib"\
+#    -lopencv_core410        \
+#    -lopencv_highgui410     \
+#    -lopencv_imgcodecs410   \
+#    -lopencv_imgproc410     \
+#    -lopencv_features2d410  \
+#    -lopencv_calib3d410
 
 
 

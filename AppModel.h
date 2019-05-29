@@ -69,6 +69,7 @@ public:
 public:
     Q_INVOKABLE void startProgram();
     Q_INVOKABLE void closeProgram();
+    Q_INVOKABLE void saveSettingConfig();
 
 signals:
     void appDataListChanged();
@@ -77,6 +78,7 @@ signals:
     void useKeyboardChanged();
     void signalStartProgram();
     void signalCloseProgram();
+    void signalSaveSettingConfig();
 
 private:
     static AppModel* m_instance;

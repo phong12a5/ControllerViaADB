@@ -136,6 +136,11 @@ typedef struct birthday_struct{
 // UNKNOW_SCREEN
 #define UNKNOW_SCREEN           "UNKNOW_SCREEN"
 
+#define CONFIG_FILE_NAME        "config.json"
+#define SAVE_LOCAL_FIELD        "save_local"
+#define SAVE_SERVER_FIELD       "save_server"
+#define USE_KEYBOARD_FIELD      "use_keyboard"
+#define APP_DATA_FIELD          "app_data"
 
 #endif // APPDEFINES_H
 

@@ -4,6 +4,23 @@
 #include "AppMain.h"
 #include "AppModel.h"
 
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QVariant>
+
+
+QJsonDocument loadJson(QString fileName) {
+    QFile jsonFile(fileName);
+    jsonFile.open(QFile::ReadOnly);
+    return QJsonDocument().fromJson(jsonFile.readAll());
+}
+
+void saveJson(QJsonDocument document, QString fileName) {
+    QFile jsonFile(fileName);
+    jsonFile.open(QFile::WriteOnly);
+    jsonFile.write(document.toJson());
+}
+
 int main(int argc, char *argv[])
 {
     LOG << "STARTING ....";
@@ -20,6 +37,20 @@ int main(int argc, char *argv[])
         LOG << "rootObject is NULL";
     }
 
+//    QVariantMap map;
+//    map.insert("integer", 1);
+//    map.insert("double", 2.34);
+//    map.insert("bool", QVariant(true));
+//    map.insert("string", "word");
+//    QJsonObject object = QJsonObject::fromVariantMap(map);
+
+//    QJsonDocument document;
+//    document.setObject(object);
+
+//    saveJson(document,"Phong.JS");
+
     return app.exec();
 }
+
+
 

@@ -11,6 +11,9 @@
 #include "Controller/RegFBController.h"
 #include "Processing/ADBCommand.h"
 #include "AppModel.h"
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QVariant>
 
 class AppMain : public QObject
 {
@@ -24,6 +27,8 @@ public:
 
 private:
     void wipeData();
+    QJsonDocument loadJson(QString fileName);
+    void saveJson(QJsonDocument document, QString fileName);
 
 public:
     void initApplication();
@@ -57,6 +62,8 @@ public slots:
     void onProcessFinished(int currentStep, int exitCode);
     void startProgram();
     void closeProgram();
+    void loadConfig();
+    void saveConfig();
 };
 
 #endif // APPMAIN_H

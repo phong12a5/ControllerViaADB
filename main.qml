@@ -58,6 +58,14 @@ Window {
         indicator.width: 20
         indicator.height: 20
         indicator.anchors.centerIn: indicator.parent
+        checkState: AppModel.saveToLocal? Qt.Checked : Qt.Unchecked
+        onCheckStateChanged: {
+            if(checkState == Qt.Checked){
+                AppModel.saveToLocal = true
+            }else{
+                AppModel.saveToLocal = false
+            }
+        }
     }
 
     Text{
@@ -79,6 +87,14 @@ Window {
         indicator.width: 20
         indicator.height: 20
         indicator.anchors.centerIn: indicator.parent
+        checkState: AppModel.saveToServer? Qt.Checked : Qt.Unchecked
+        onCheckStateChanged: {
+            if(checkState == Qt.Checked){
+                AppModel.saveToServer = true
+            }else{
+                AppModel.saveToServer = false
+            }
+        }
     }
 
     Text{
@@ -100,6 +116,14 @@ Window {
         indicator.width: 20
         indicator.height: 20
         indicator.anchors.centerIn: indicator.parent
+        checkState: AppModel.useKeyboard? Qt.Checked : Qt.Unchecked
+        onCheckStateChanged: {
+            if(checkState == Qt.Checked){
+                AppModel.useKeyboard = true
+            }else{
+                AppModel.useKeyboard = false
+            }
+        }
     }
 
     Text{
@@ -172,6 +196,7 @@ Window {
         text: "Start"
         onReleased: {
             enableAre.visible = true
+            AppModel.saveSettingConfig()
             AppModel.startProgram()
         }
     }

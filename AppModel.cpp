@@ -12,6 +12,11 @@ void AppModel::closeProgram()
     emit signalCloseProgram();
 }
 
+void AppModel::saveSettingConfig()
+{
+    emit signalSaveSettingConfig();
+}
+
 AppModel::AppModel(QObject *parent) :
     QObject(parent),
     m_saveToLocal(false),
@@ -53,6 +58,7 @@ bool AppModel::saveToLocal() const
 void AppModel::setSaveToLocal(bool data)
 {
     if(m_saveToLocal != data){
+        LOG << "[AppModel]" << data;
         m_saveToLocal = data;
         emit saveToLocalChanged();
     }
@@ -66,6 +72,7 @@ bool AppModel::saveToServer() const
 void AppModel::setSaveToServer(bool data)
 {
     if(m_saveToServer != data){
+        LOG << "[AppModel]" << data;
         m_saveToServer = data;
         emit saveToServerChanged();
     }
@@ -79,6 +86,7 @@ bool AppModel::useKeyboard()
 void AppModel::setUseKeyboard(bool data)
 {
     if(m_useKeyboard != data){
+        LOG << "[AppModel]" << data;
         m_useKeyboard = data;
         emit useKeyboardChanged();
     }

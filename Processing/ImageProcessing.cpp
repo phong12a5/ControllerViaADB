@@ -13,6 +13,7 @@ QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QS
 
 //    LOG << "[ImageProcessing]" << "Small image: " << QImage(smallImagePath).size();
 //    LOG << "[ImageProcessing]" << "Large image: " << QImage(largeImagePath).size();
+#if 0
 
     cv::Mat _smallImage = cv::imread(smallImagePath.toUtf8().constData());
     cv::Mat _largeImage = cv::imread(largeImagePath.toUtf8().constData());
@@ -62,6 +63,7 @@ QPoint ImageProcessing::findImageOnImage(const QString &smallImagePath, const QS
     }
 
 //    LOG << "[ImageProcessing]" << "Return values: " << retVal << " --- bestMaxVal: " << bestMaxval;
+#endif
     return retVal;
 }
 
@@ -69,6 +71,9 @@ QString ImageProcessing::extractCaptchaImage(const QString &path)
 {
     LOG << "[ImageProcessing]" << "Path: " << path;
 
+#if 1
+    return  QString("");
+#else
     cv::Mat src = cv::imread(path.toUtf8().constData());
     cv::Rect crop(58 , 473, 715, 216);
     cv::Mat rez = src(crop);
@@ -83,4 +88,5 @@ QString ImageProcessing::extractCaptchaImage(const QString &path)
         LOG << "[ImageProcessing]" << "Couldn't extract captcha image";
         return QString("");
     }
+#endif
 }

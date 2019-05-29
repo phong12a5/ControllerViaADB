@@ -36,6 +36,62 @@ void AppMain::wipeData()
     }
 }
 
+void AppMain::loadConfig()
+{
+    LOG << "[AppMain]";
+    QJsonObject config = this->loadJson(CONFIG_FILE_NAME).object();
+    APP_MODEL->setSaveToLocal(config[SAVE_LOCAL_FIELD].toBool());
+    APP_MODEL->setSaveToServer(config[SAVE_SERVER_FIELD].toBool());
+    APP_MODEL->setUseKeyboard(config[USE_KEYBOARD_FIELD].toBool());
+    QJsonObject appDataObj = config[APP_DATA_FIELD].toObject();
+    if(!appDataObj.isEmpty()){
+        QJsonObject appData;
+        for(int i = 0; i < APP_MODEL->appDataList().length(); i++){
+            APP_DATA* app = dynamic_cast<APP_DATA*>(APP_MODEL->appDataList().at(i));
+            QString packageName = app->packageName();
+            bool state = appDataObj[packageName].toBool();
+            app->setCheckedState(state);
+        }
+    }else{
+        LOG << "[AppMain]" << " appDataObj is empty";
+    }
+}
+
+void AppMain::saveConfig()
+{
+    LOG << "[AppMain]";
+    QJsonObject config;
+    QJsonObject appData;
+
+    for(int i = 0; i < APP_MODEL->appDataList().length(); i++){
+        APP_DATA* app = dynamic_cast<APP_DATA*>(APP_MODEL->appDataList().at(i));
+        QString packageName = app->packageName();
+        appData[packageName] = app->checkedState();
+    }
+    config[SAVE_LOCAL_FIELD] = APP_MODEL->saveToLocal();
+    config[SAVE_SERVER_FIELD] = APP_MODEL->saveToServer();
+    config[USE_KEYBOARD_FIELD] = APP_MODEL->useKeyboard();
+    config[APP_DATA_FIELD] = appData;
+
+    this->saveJson(QJsonDocument(config),CONFIG_FILE_NAME);
+}
+
+QJsonDocument AppMain::loadJson(QString fileName)
+{
+    LOG << "[AppMain]";
+    QFile jsonFile(fileName);
+    jsonFile.open(QFile::ReadOnly);
+    return QJsonDocument().fromJson(jsonFile.readAll());
+}
+
+void AppMain::saveJson(QJsonDocument document, QString fileName)
+{
+    LOG << "[AppMain]";
+    QFile jsonFile(fileName);
+    jsonFile.open(QFile::WriteOnly);
+    jsonFile.write(document.toJson());
+}
+
 void AppMain::initApplication()
 {
     LOG << "[AppMain]";
@@ -43,6 +99,7 @@ void AppMain::initApplication()
     REG_DEVICE_INFO_CTR->initRegDeviceInfoController();
     REG_MAIL_CTR->initRegMailController();
     REG_FBACC_CTR->initRegFBController();
+    this->loadConfig();
 
     QObject::connect(&m_updateCurrActTimer, SIGNAL(timeout()), this, SLOT(onUpdateCurrentActivity()));
     QObject::connect(this, SIGNAL(processFinished(int,int)), this, SLOT(onProcessFinished(int,int)));
@@ -51,6 +108,7 @@ void AppMain::initApplication()
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_FBACC_CTR,         SLOT(onCurrentActivityChanged()));
     QObject::connect(APP_MODEL, SIGNAL(signalStartProgram()), this, SLOT(startProgram()));
     QObject::connect(APP_MODEL, SIGNAL(signalCloseProgram()), this, SLOT(closeProgram()));
+    QObject::connect(APP_MODEL, SIGNAL(signalSaveSettingConfig()), this, SLOT(saveConfig()));
 }
 
 void AppMain::startProgram()

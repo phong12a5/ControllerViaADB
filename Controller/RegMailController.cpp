@@ -100,6 +100,8 @@ void RegMailController::readInforFromFile()
 void RegMailController::setUserInforToReg()
 {
     LOG << "[RegMailController]";
+    if(m_firstNameList.isEmpty() || m_lastNameList.isEmpty())
+        return;
 #ifdef USE_KEYBOARD
     m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length())).toLower();
     m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length())).toLower();
