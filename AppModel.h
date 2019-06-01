@@ -46,6 +46,9 @@ class AppModel : public QObject
     Q_PROPERTY(bool saveToLocal READ saveToLocal WRITE setSaveToLocal NOTIFY saveToLocalChanged)
     Q_PROPERTY(bool saveToServer READ saveToServer WRITE setSaveToServer NOTIFY saveToServerChanged)
     Q_PROPERTY(bool useKeyboard READ useKeyboard WRITE setUseKeyboard NOTIFY useKeyboardChanged)
+    Q_PROPERTY(bool regFacebookOption READ regFacebookOption WRITE setRegFacebookOption NOTIFY regFacebookOptionChanged)
+    Q_PROPERTY(bool recoveryEmail READ recoveryEmail WRITE setRecoveryEmail NOTIFY recoveryEmailChanged)
+    Q_PROPERTY(QString nameLang READ nameLang WRITE setNameLang NOTIFY nameLangChanged)
 
 private:
     explicit AppModel(QObject *parent = nullptr);
@@ -66,9 +69,17 @@ public:
     bool useKeyboard();
     void setUseKeyboard(bool data);
 
+    bool regFacebookOption() const;
+    void setRegFacebookOption(bool data);
+
+    bool recoveryEmail() const;
+    void setRecoveryEmail(bool data);
+
+    QString nameLang() const;
+    void setNameLang(QString data);
 public:
-    Q_INVOKABLE void startProgram();
-    Q_INVOKABLE void closeProgram();
+    Q_INVOKABLE void startProgram(QString tokenID);
+    Q_INVOKABLE void closeProgram(QString tokenID);
     Q_INVOKABLE void saveSettingConfig();
 
 signals:
@@ -76,9 +87,12 @@ signals:
     void saveToLocalChanged();
     void saveToServerChanged();
     void useKeyboardChanged();
-    void signalStartProgram();
-    void signalCloseProgram();
+    void signalStartProgram(QString tokenID);
+    void signalCloseProgram(QString tokenID);
     void signalSaveSettingConfig();
+    void regFacebookOptionChanged();
+    void recoveryEmailChanged();
+    void nameLangChanged();
 
 private:
     static AppModel* m_instance;
@@ -88,6 +102,9 @@ private:
     bool m_saveToLocal;
     bool m_saveToServer;
     bool m_useKeyboard;
+    bool m_regFacebookOption;
+    bool m_recoveryEmail;
+    QString m_nameLang;
 
     QStringList PACKAGE_LIST = QStringList() << "app.haonam.xgame"
             << "com.android.apps.tag"

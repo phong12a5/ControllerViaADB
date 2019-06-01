@@ -36,6 +36,11 @@ void AppMain::wipeData()
     }
 }
 
+void AppMain::killCurrentApp()
+{
+    ADBCommand::killSpecificApp(this->getCurrentPackage());
+}
+
 void AppMain::loadConfig()
 {
     LOG << "[AppMain]";
@@ -46,6 +51,9 @@ void AppMain::loadConfig()
         APP_MODEL->setSaveToLocal(config[SAVE_LOCAL_FIELD].toBool());
         APP_MODEL->setSaveToServer(config[SAVE_SERVER_FIELD].toBool());
         APP_MODEL->setUseKeyboard(config[USE_KEYBOARD_FIELD].toBool());
+        APP_MODEL->setRegFacebookOption(config[REG_FAEBOOK_FIELD].toBool());
+        APP_MODEL->setRecoveryEmail(config[RECOVERY_EMAIL_FIELD].toBool());
+        APP_MODEL->setNameLang(config[NAME_LANG_FIELD].toString());
         QJsonObject appDataObj = config[APP_DATA_FIELD].toObject();
         if(!appDataObj.isEmpty()){
             QJsonObject appData;
@@ -75,6 +83,9 @@ void AppMain::saveConfig()
     config[SAVE_LOCAL_FIELD] = APP_MODEL->saveToLocal();
     config[SAVE_SERVER_FIELD] = APP_MODEL->saveToServer();
     config[USE_KEYBOARD_FIELD] = APP_MODEL->useKeyboard();
+    config[REG_FAEBOOK_FIELD] = APP_MODEL->regFacebookOption();
+    config[RECOVERY_EMAIL_FIELD] = APP_MODEL->recoveryEmail();
+    config[NAME_LANG_FIELD] = APP_MODEL->nameLang();
     config[APP_DATA_FIELD] = appData;
 
     this->saveJson(QJsonDocument(config),CONFIG_FILE_NAME);
@@ -99,32 +110,32 @@ void AppMain::saveJson(QJsonDocument document, QString fileName)
 void AppMain::initApplication()
 {
     LOG << "[AppMain]";
-
+    this->loadConfig();
     REG_DEVICE_INFO_CTR->initRegDeviceInfoController();
     REG_MAIL_CTR->initRegMailController();
     REG_FBACC_CTR->initRegFBController();
-    this->loadConfig();
 
     QObject::connect(&m_updateCurrActTimer, SIGNAL(timeout()), this, SLOT(onUpdateCurrentActivity()));
     QObject::connect(this, SIGNAL(processFinished(int,int)), this, SLOT(onProcessFinished(int,int)));
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_DEVICE_INFO_CTR,   SLOT(onCurrentActivityChanged()));
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_MAIL_CTR,          SLOT(onCurrentActivityChanged()));
     QObject::connect(this, SIGNAL(currentActivityChanged()), REG_FBACC_CTR,         SLOT(onCurrentActivityChanged()));
-    QObject::connect(APP_MODEL, SIGNAL(signalStartProgram()), this, SLOT(startProgram()));
-    QObject::connect(APP_MODEL, SIGNAL(signalCloseProgram()), this, SLOT(closeProgram()));
+    QObject::connect(APP_MODEL, SIGNAL(signalStartProgram(QString)), this, SLOT(startProgram(QString)));
+    QObject::connect(APP_MODEL, SIGNAL(signalCloseProgram(QString)), this, SLOT(closeProgram(QString)));
     QObject::connect(APP_MODEL, SIGNAL(signalSaveSettingConfig()), this, SLOT(saveConfig()));
 }
 
-void AppMain::startProgram()
+void AppMain::startProgram(QString tokenID)
 {
-    LOG << "[AppMain]";
+    LOG << "[AppMain] " << tokenID;
+    this->setCurrentActivity(ADBCommand::currentActivity());
     this->restartProgram();
     m_updateCurrActTimer.start();
 }
 
-void AppMain::closeProgram()
+void AppMain::closeProgram(QString tokenID)
 {
-    LOG << "AppMain";
+    LOG << "AppMain" << tokenID;
     QCoreApplication::quit();
 }
 
@@ -132,6 +143,7 @@ void AppMain::restartProgram()
 {
     LOG << "AppMain";
     this->wipeData();
+    this->killCurrentApp();
     ADBCommand::goHomeScreen();
 }
 
@@ -196,13 +208,20 @@ void AppMain::onProcessFinished(int currentStep, int exitCode)
         }else if(currentStep == AppEnums::E_EXCUTE_REG_GMAIL){
             REG_FBACC_CTR->setUserInfo(REG_MAIL_CTR->getEmailInfor());
             LOG << "[AppMain]" << "Reg gmail completed! -> Start reg facebook";
-            this->setCurrentExcuteStep(AppEnums::E_EXCUTE_REG_FACBOOK);
+            if(APP_MODEL->regFacebookOption()){
+                this->setCurrentExcuteStep(AppEnums::E_EXCUTE_REG_FACBOOK);
+            }else{
+                this->setCurrentExcuteStep(AppEnums::E_EXCUTE_CHANGE_INFO);
+            }
+            this->killCurrentApp();
             ADBCommand::goHomeScreen();
         }else if(currentStep == AppEnums::E_EXCUTE_REG_FACBOOK){
             REG_MAIL_CTR->saveEmailToOutput();
             REG_MAIL_CTR->setUserInforToReg();
             LOG << "[AppMain]" << "Process completed! -> Restart process";
             this->setCurrentExcuteStep(AppEnums::E_EXCUTE_CHANGE_INFO);
+            this->killCurrentApp();
+            ADBCommand::goHomeScreen();
             this->restartProgram();
         }
     }

@@ -1,5 +1,6 @@
 QT += quick
 QT += testlib
+QT += gui
 
 CONFIG += c++11
 

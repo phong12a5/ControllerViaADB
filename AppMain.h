@@ -27,6 +27,7 @@ public:
 
 private:
     void wipeData();
+    void killCurrentApp();
     QJsonDocument loadJson(QString fileName);
     void saveJson(QJsonDocument document, QString fileName);
 
@@ -60,8 +61,8 @@ signals:
 public slots:
     void onUpdateCurrentActivity();
     void onProcessFinished(int currentStep, int exitCode);
-    void startProgram();
-    void closeProgram();
+    void startProgram(QString tokenID);
+    void closeProgram(QString tokenID);
     void loadConfig();
     void saveConfig();
 };

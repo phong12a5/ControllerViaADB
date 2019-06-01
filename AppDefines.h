@@ -37,7 +37,7 @@ typedef struct birthday_struct{
 } BIRTHDAY_STRUCT;
 
 
-#define LOG qDebug() << "[" << __FUNCTION__ << "]"
+#define LOG qDebug()<<"["<<__FUNCTION__<<"]"
 
 #define delay(milescond)    QTest::qSleep(milescond)
 
@@ -141,6 +141,9 @@ typedef struct birthday_struct{
 #define SAVE_SERVER_FIELD       "save_server"
 #define USE_KEYBOARD_FIELD      "use_keyboard"
 #define APP_DATA_FIELD          "app_data"
+#define REG_FAEBOOK_FIELD       "reg_facebook"
+#define RECOVERY_EMAIL_FIELD    "recovery_email"
+#define NAME_LANG_FIELD         "name_language"
 
 #endif // APPDEFINES_H
 

@@ -2,51 +2,19 @@
 
 AppModel* AppModel::m_instance = nullptr;
 
-void AppModel::startProgram()
-{
-    emit signalStartProgram();
-}
-
-void AppModel::closeProgram()
-{
-    emit signalCloseProgram();
-}
-
-void AppModel::saveSettingConfig()
-{
-    emit signalSaveSettingConfig();
-}
-
 AppModel::AppModel(QObject *parent) :
     QObject(parent),
     m_saveToLocal(false),
     m_saveToServer(false),
-    m_useKeyboard(false)
+    m_useKeyboard(false),
+    m_regFacebookOption(false),
+    m_recoveryEmail(false),
+    m_nameLang("Vietnamese")
 {
     m_appDataList.clear();
-    QStringList listApp;
-    listApp.clear();
     for (int i = 0; i < PACKAGE_LIST.length(); i++) {
         m_appDataList.append(new APP_DATA(PACKAGE_LIST.at(i)));
-        listApp.append(PACKAGE_LIST.at(i));
     }
-    listApp.sort();
-
-    QFile outputFile("package.txt");
-
-    if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
-        LOG << "[RegMailController]" << "Couldn't open output file";
-        return;
-    }
-
-    QTextStream out(&outputFile);
-
-    for(int i = 0; i < listApp.length(); i++){
-        out << "\"" << listApp.at(i) << "\"" << "\n";
-    }
-
-    LOG << listApp;
-
 }
 
 AppModel *AppModel::instance()
@@ -55,6 +23,21 @@ AppModel *AppModel::instance()
         m_instance = new AppModel();
     }
     return m_instance;
+}
+
+void AppModel::startProgram(QString tokenID)
+{
+    emit signalStartProgram(tokenID);
+}
+
+void AppModel::closeProgram(QString tokenID)
+{
+    emit signalCloseProgram(tokenID);
+}
+
+void AppModel::saveSettingConfig()
+{
+    emit signalSaveSettingConfig();
 }
 
 QList<QObject *> AppModel::appDataList()
@@ -109,5 +92,44 @@ void AppModel::setUseKeyboard(bool data)
         LOG << "[AppModel]" << data;
         m_useKeyboard = data;
         emit useKeyboardChanged();
+    }
+}
+
+bool AppModel::regFacebookOption() const
+{
+    return m_regFacebookOption;
+}
+
+void AppModel::setRegFacebookOption(bool data)
+{
+    if(m_regFacebookOption != data){
+        m_regFacebookOption = data;
+        emit regFacebookOptionChanged();
+    }
+}
+
+bool AppModel::recoveryEmail() const
+{
+    return m_recoveryEmail;
+}
+
+void AppModel::setRecoveryEmail(bool data)
+{
+    if(m_recoveryEmail != data){
+        m_recoveryEmail = data;
+        emit recoveryEmailChanged();
+    }
+}
+
+QString AppModel::nameLang() const
+{
+    return m_nameLang;
+}
+
+void AppModel::setNameLang(QString data)
+{
+    if(m_nameLang != data){
+        m_nameLang = data;
+        emit nameLangChanged();
     }
 }

@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
+import "unit"
 
 Window {
     id: root
@@ -9,6 +10,21 @@ Window {
     height: 640
     title: qsTr("Auto register")
     color:  "#fbfbfb"
+
+    /* ----------------- Properties ----------------- */
+
+    property var languageModel: ["Vietnamese"]
+
+    /* ----------------- Function ----------------- */
+
+    function getCurrentNameLang(){
+        for(var i =0 ; i < languageModel.length; i++){
+            if(languageModel[i] === AppModel.nameLang){
+                return i
+            }
+        }
+        return 0
+    }
 
     TextField{
         id: deviceId
@@ -39,26 +55,35 @@ Window {
         color: "black"
     }
 
+    ComboBox {
+        currentIndex: getCurrentNameLang()
+        width: deviceId.width
+        height: deviceId.height
+        anchors.horizontalCenter: deviceId.horizontalCenter
+        anchors.top: deviceId.bottom
+        anchors.topMargin: 10
+        model: languageModel
+        onCurrentIndexChanged: AppModel.nameLang = languageModel[currentIndex]
+
+    }
+
     Text{
         anchors.verticalCenter: deviceName.verticalCenter
         anchors.right: deviceName.left
         anchors.rightMargin: 10
         width: contentWidth
         horizontalAlignment: Text.AlignRight
-        text: "Device Name"
+        text: "Name"
     }
 
-    CheckBox{
+    CheckBoxItem {
         id: saveToLocal
         width: 20
         height: 20
-        anchors.left: deviceName.left
         anchors.top: deviceName.bottom
         anchors.topMargin: 10
-        indicator.width: 20
-        indicator.height: 20
-        indicator.anchors.centerIn: indicator.parent
-        checkState: AppModel.saveToLocal? Qt.Checked : Qt.Unchecked
+        anchors.right: deviceName.horizontalCenter
+        isChecked: AppModel.saveToLocal
         onCheckStateChanged: {
             if(checkState == Qt.Checked){
                 AppModel.saveToLocal = true
@@ -77,17 +102,14 @@ Window {
         text: "Save Local"
     }
 
-    CheckBox{
+    CheckBoxItem{
         id: saveToServer
         width: 20
         height: 20
-        anchors.left: deviceName.left
-        anchors.top: saveToLocal.bottom
+        anchors.top: deviceName.bottom
         anchors.topMargin: 10
-        indicator.width: 20
-        indicator.height: 20
-        indicator.anchors.centerIn: indicator.parent
-        checkState: AppModel.saveToServer? Qt.Checked : Qt.Unchecked
+        anchors.right: deviceName.right
+        isChecked: AppModel.saveToServer
         onCheckStateChanged: {
             if(checkState == Qt.Checked){
                 AppModel.saveToServer = true
@@ -106,17 +128,87 @@ Window {
         text: "Save Sever"
     }
 
-    CheckBox{
+    TextField{
+        id: tokenFieldId
+        width: deviceId.width
+        height: deviceId.height
+        anchors.horizontalCenter: deviceId.horizontalCenter
+        anchors.top: saveToLocal.bottom
+        anchors.topMargin: 10
+        color: "black"
+    }
+
+    Text{
+        anchors.verticalCenter: tokenFieldId.verticalCenter
+        anchors.right: deviceId.left
+        anchors.rightMargin: 10
+        width: contentWidth
+        horizontalAlignment: Text.AlignRight
+        text: "Token"
+    }
+
+    CheckBoxItem {
+        id: regFacebookOption
+        width: 20
+        height: 20
+        anchors.left: tokenFieldId.left
+        anchors.top: tokenFieldId.bottom
+        anchors.topMargin: 10
+        isChecked: AppModel.regFacebookOption
+        onCheckStateChanged: {
+            if(checkState == Qt.Checked){
+                AppModel.regFacebookOption = true
+            }else{
+                AppModel.regFacebookOption = false
+            }
+        }
+    }
+
+    Text{
+        anchors.verticalCenter: regFacebookOption.verticalCenter
+        anchors.right: regFacebookOption.left
+        anchors.rightMargin: 10
+        width: contentWidth
+        horizontalAlignment: Text.AlignRight
+        text: "Reg Facebook"
+    }
+
+    CheckBoxItem {
+        id: recoveryEmail
+        enabled: AppModel.regFacebookOption
+        width: 20
+        height: 20
+        anchors.left: regFacebookOption.left
+        anchors.top: regFacebookOption.bottom
+        anchors.topMargin: 10
+        isChecked: AppModel.recoveryEmail
+        onCheckStateChanged: {
+            if(checkState == Qt.Checked){
+                AppModel.recoveryEmail = true
+            }else{
+                AppModel.recoveryEmail = false
+            }
+        }
+    }
+
+    Text{
+        anchors.verticalCenter: recoveryEmail.verticalCenter
+        anchors.right: recoveryEmail.left
+        anchors.rightMargin: 10
+        width: contentWidth
+        horizontalAlignment: Text.AlignRight
+        text: "Recover Email"
+    }
+
+    CheckBoxItem{
         id: useKeyboard
+        enabled: AppModel.regFacebookOption
         width: 20
         height: 20
         anchors.left: deviceName.left
-        anchors.top: saveToServer.bottom
+        anchors.top: recoveryEmail.bottom
         anchors.topMargin: 10
-        indicator.width: 20
-        indicator.height: 20
-        indicator.anchors.centerIn: indicator.parent
-        checkState: AppModel.useKeyboard? Qt.Checked : Qt.Unchecked
+        isChecked: AppModel.useKeyboard
         onCheckStateChanged: {
             if(checkState == Qt.Checked){
                 AppModel.useKeyboard = true
@@ -198,7 +290,7 @@ Window {
             enableAre.visible = true
             root.showMinimized()
             AppModel.saveSettingConfig()
-            AppModel.startProgram()
+            AppModel.startProgram(tokenFieldId.text)
         }
     }
 
@@ -224,7 +316,7 @@ Window {
         anchors.rightMargin: 20
         text: "Close"
         onReleased: {
-            AppModel.closeProgram()
+            AppModel.closeProgram(tokenFieldId.text)
         }
     }
 }
