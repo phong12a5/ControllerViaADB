@@ -219,10 +219,8 @@ void RegFBController::onCurrentActivityChanged()
     if(APP_MAIN->currentExcuteStep() == AppEnums::E_EXCUTE_REG_FACBOOK){
         // Handle when currentExcuteStep = E_EXCUTE_REG_GMAIL
         LOG << "[RegFBController]" << APP_MAIN->getCurrentActivity();
-        if(APP_MAIN->getCurrentActivity() == HOME_SCREEN ||
-                APP_MAIN->getCurrentActivity() == NONE_SCREEN)
+        if(APP_MAIN->getCurrentActivity() == HOME_SCREEN)
         {
-//            this->clearCacheFBLite();
             this->setCurrentScreen(-1);
             LOG << "[RegFBController]" << "Reqest to go to Facebook Lite application";
             ADBCommand::requestShowApp(FBLITE_PKG,FBLITE_ACTIVITYMAIN);

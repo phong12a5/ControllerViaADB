@@ -28,8 +28,7 @@ void RegDeviceInfoController::onCurrentActivityChanged()
     if(APP_MAIN->currentExcuteStep() == AppEnums::E_EXCUTE_CHANGE_INFO){
         // Handle when currentExcuteStep = E_EXCUTE_CHANGE_INFO
         LOG << "[RegDeviceInfoController]" << APP_MAIN->getCurrentActivity();
-        if(APP_MAIN->getCurrentActivity() == HOME_SCREEN ||
-           APP_MAIN->getCurrentActivity() == NONE_SCREEN)
+        if(APP_MAIN->getCurrentActivity() == HOME_SCREEN)
         {
             LOG << "[RegDeviceInfoController]" << "Reqest to go to XGame application";
             ADBCommand::requestShowApp(XGAME_PKG,XGAME_ACTIVITYMAIN);

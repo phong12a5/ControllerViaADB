@@ -14,6 +14,9 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QVariant>
+#include <QThread>
+#include <QMutex>
+#include "Controller/ThreadController.h"
 
 class AppMain : public QObject
 {
@@ -47,7 +50,7 @@ public:
 
 private:
     static AppMain* m_instance;
-
+    ThreadController screenController;
 private:
     QString m_currentActivity;
     QString m_currentPackage;

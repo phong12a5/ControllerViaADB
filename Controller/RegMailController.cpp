@@ -25,7 +25,6 @@ void RegMailController::initRegMailController()
     LOG << "[RegMailController]";
     srand(time(nullptr));
     this->readInforFromFile();
-    this->setUserInforToReg();
 }
 
 
@@ -103,15 +102,19 @@ void RegMailController::setUserInforToReg()
     LOG << "[RegMailController]";
     if(m_firstNameList.isEmpty() || m_lastNameList.isEmpty())
         return;
+
+    m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length()));
+    m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length()));
+    m_userInfor.gmailPassword = m_userInfor.firstName + m_userInfor.lastName + "@" + QString::number(rand() % 30000 + 10000);
+
     if(APP_MODEL->useKeyboard()){
-        m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length())).toLower();
-        m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length())).toLower();
+        m_userInfor.firstName = m_userInfor.firstName.toLower();
+        m_userInfor.lastName = m_userInfor.lastName.toLower();
     }else{
         m_userInfor.firstName = m_firstNameList.at(rand() % (m_firstNameList.length()));
         m_userInfor.lastName = m_lastNameList.at(rand() % (m_lastNameList.length()));
     }
     m_userInfor.userName = m_userInfor.firstName + m_userInfor.lastName + QString::number(rand() % 1000000000 + 3000000);
-    m_userInfor.gmailPassword = m_userInfor.firstName + m_userInfor.lastName + QString::number(rand() % 30000 + 10000);
     m_userInfor.captcha = "";
 
     if(APP_MODEL->useKeyboard()){
@@ -149,8 +152,14 @@ void RegMailController::saveEmailToOutput()
     }
 
     QTextStream out(&outputFile);
-    out << (this->getEmailInfor().userName + "@gmail.com|" + this->getEmailInfor().gmailPassword) << "|" << this->getEmailInfor().fbPassword <<  "\n";
+    if(APP_MODEL->regFacebookOption()){
+        out << (this->getEmailInfor().userName + "@gmail.com|" + this->getEmailInfor().gmailPassword) << "|" << this->getEmailInfor().fbPassword <<  "\n";
+    }else{
+        out << (this->getEmailInfor().userName + "@gmail.com|" + this->getEmailInfor().gmailPassword) << "\n";
+    }
+    outputFile.close();
 }
+
 
 QString RegMailController::sendCaptcherScreen(QString screenPath)
 {
@@ -170,12 +179,9 @@ void RegMailController::onCurrentActivityChanged()
     if(APP_MAIN->currentExcuteStep() == AppEnums::E_EXCUTE_REG_GMAIL){
         // Handle when currentExcuteStep = E_EXCUTE_REG_GMAIL
         LOG << "[RegMailController]" << APP_MAIN->getCurrentActivity();
-        if(APP_MAIN->getCurrentActivity() == HOME_SCREEN ||
-           APP_MAIN->getCurrentActivity() == NONE_SCREEN)
+        if(APP_MAIN->getCurrentActivity() == HOME_SCREEN)
         {
             if(this->getEmailInfor().captcha != ""){
-//                this->saveEmailToOutput();
-//                this->setUserInforToReg();
                 emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),0);
             }else{
                 LOG << "[RegMailController]" << "Reqest to go to account setting screen";
@@ -241,24 +247,27 @@ void RegMailController::onCurrentActivityChanged()
                 ADBCommand::goHomeScreen();
             }
 
-        }else if(ADBCommand::currentActivity() == SYNC_INTRO_SCREEN){
+        }else if(APP_MAIN->getCurrentActivity() == SYNC_INTRO_SCREEN){
             delay(500);
-            if(ADBCommand::currentActivity() == SYNC_INTRO_SCREEN){
+            if(APP_MAIN->getCurrentActivity() == SYNC_INTRO_SCREEN){
                 if(!ADBCommand::findAndClick(NEXT_YOURNAME_ICON)){
                     LOG << "[RegMailController]" << "Couldn't click NEXT CAPTCHA";
                     this->getEmailInfor().captcha = "";
                     ADBCommand::goHomeScreen();
                 }
             }
-        }else if(ADBCommand::currentActivity() == PAYMENT_SETTING_SCREEN){
+        }else if(APP_MAIN->getCurrentActivity() == PAYMENT_SETTING_SCREEN){
             if(!ADBCommand::findAndClick(SKIP_PAYMENT_ICON)){
                 LOG << "[RegMailController]" << "Couldn't click SKIP PAYMENT";
                 this->getEmailInfor().captcha = "";
                 ADBCommand::goHomeScreen();
             }
-        }else if(ADBCommand::currentActivity() == WIFI_PICKER_SCREEN){
+        }else if(APP_MAIN->getCurrentActivity() == WIFI_PICKER_SCREEN){
             LOG << "[RegMailController]" << "Back when current screen is wifi setting";
             ADBCommand::pressBack();
+        }else if(APP_MAIN->getCurrentActivity() == COULD_NOT_SIGNIN){
+            LOG << "[RegMailController]" << "Couldn't sign in";
+            emit APP_MAIN->processFinished(APP_MAIN->currentExcuteStep(),1);
         }
     }
 }

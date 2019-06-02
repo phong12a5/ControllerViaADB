@@ -169,11 +169,11 @@ QString ADBCommand::currentActivity()
             wakeUpScreen();
         }
 
-        proc.start("adb shell dumpsys window windows | grep -E 'mFocusedApp'");
+        proc.start("adb shell dumpsys window windows | grep -E 'mCurrentFocus'");
         proc.waitForFinished(-1);
         QStringList output = QString(proc.readAllStandardOutput()).split(' ');
-        if(output.length() > 6){
-            retVal = output.at(6);
+        if(output.length() > 4){
+            retVal = output.at(4).simplified().remove('}');
         }
     }else{
         retVal = UNKNOW_SCREEN;

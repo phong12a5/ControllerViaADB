@@ -46,8 +46,6 @@ typedef struct birthday_struct{
 #define LAST_NAME_FILE      QDir::currentPath()+"/lastname.txt"
 #define OUTPUT_FILE         QDir::currentPath()+"/emailList.txt"
 
-#define SETTING_PKG             "com.android.settings"
-#define SETTING_ACTIVITYMAIN    ".Settings"
 #define ACCOUNT_SETTING_ACT     "android.settings.ADD_ACCOUNT_SETTINGS"
 
 #define XGAME_PKG               "app.haonam.xgame"
@@ -55,16 +53,6 @@ typedef struct birthday_struct{
 
 #define FBLITE_PKG              "com.facebook.lite"
 #define FBLITE_ACTIVITYMAIN     ".MainActivity"
-
-#define GG_BACKUP_TRANSPORT     "com.google.android.backuptransport"
-#define GG_PLUS                 "com.google.android.apps.plus"
-#define GG_SERVICE_FRAMEWORK    "com.google.android.gsf"
-#define GG_PLAY_SERVICE         "com.google.android.gms"
-#define GG_PARTNER_SETUP        "com.google.android.partnersetup"
-#define GG_CHROME               "com.android.chrome"
-#define GG_ACCOUNT_MANAGER      "com.google.android.gsf.login"
-#define LOCATION_SERVICES       "com.qualcomm.location"
-#define GOOGLE_PLAY_STORE       "com.android.vending"
 
 
 // GOOGLE SETTING icons
@@ -110,28 +98,27 @@ typedef struct birthday_struct{
 
 //HOME activities
 #define HOME_SCREEN             "com.sonyericsson.home/com.sonymobile.home.HomeActivity"
-#define NONE_SCREEN             ""
 
 //GOOGLE SETTING activities
-#define ACCOUNT_SETTING_SCREEN  "com.android.settings/.accounts.ChooseAccountActivity"
-#define ADD_A_GGACCOUNT_SCREEN  "com.google.android.gsf.login/.AccountIntroUIActivity"
-#define INPUT_YOURNAME_SCREEN   "com.google.android.gsf.login/.NameActivity"
-#define INPUT_USERNAME_SCREEN   "com.google.android.gsf.login/.UsernameActivity"
-#define INPUT_PASSWORD_SCREEN   "com.google.android.gsf.login/.ChoosePasswordActivity"
-#define RECOVERY_INTRO_SCREEN   "com.google.android.gsf.login/.RecoveryIntroActivity"
-#define GOOGLE_SERVICE_SCREEN   "com.google.android.gsf.login/.GoogleServicesActivity"
-#define TERM_SERVICE_SCREEN     "com.google.android.gsf.login/.TermsOfServiceActivity"
-#define AUTHENTICATING_SCREEN   "com.google.android.gsf.login/.CaptchaActivity"
-#define WIFI_PICKER_SCREEN      "com.android.settings/.wifi.WifiPickerActivity"
-#define SYNC_INTRO_SCREEN       "com.google.android.gsf.login/.SyncIntroActivity"
+#define ACCOUNT_SETTING_SCREEN  "com.android.settings/com.android.settings.accounts.ChooseAccountActivity"
+#define ADD_A_GGACCOUNT_SCREEN  "com.google.android.gsf.login/com.google.android.gsf.login.AccountIntroUIActivity"
+#define INPUT_YOURNAME_SCREEN   "com.google.android.gsf.login/com.google.android.gsf.login.NameActivity"
+#define INPUT_USERNAME_SCREEN   "com.google.android.gsf.login/com.google.android.gsf.login.UsernameActivity"
+#define INPUT_PASSWORD_SCREEN   "com.google.android.gsf.login/com.google.android.gsf.login.ChoosePasswordActivity"
+#define RECOVERY_INTRO_SCREEN   "com.google.android.gsf.login/com.google.android.gsf.login.RecoveryIntroActivity"
+#define GOOGLE_SERVICE_SCREEN   "com.google.android.gsf.login/com.google.android.gsf.login.GoogleServicesActivity"
+#define TERM_SERVICE_SCREEN     "com.google.android.gsf.login/com.google.android.gsf.login.TermsOfServiceActivity"
+#define AUTHENTICATING_SCREEN   "com.google.android.gsf.login/com.google.android.gsf.login.CaptchaActivity"
+#define WIFI_PICKER_SCREEN      "com.android.settings/com.android.settings.wifi.WifiPickerActivity"
+#define SYNC_INTRO_SCREEN       "com.google.android.gsf.login/com.google.android.gsf.login.SyncIntroActivity"
 #define PAYMENT_SETTING_SCREEN  "com.android.vending/com.google.android.finsky.billing.promptforfop.SetupWizardPromptForFopActivity"
-
+#define COULD_NOT_SIGNIN        "com.google.android.gsf.login/com.google.android.gsf.login.ShowErrorActivity"
 
 // XGAME activities
-#define XGAME_SCREEN            "app.haonam.xgame/.MainActivity"
+#define XGAME_SCREEN            "app.haonam.xgame/app.haonam.xgame.MainActivity"
 
 // FACEBOOK LITE activity
-#define FACEBOOK_LITE_SCREEN    "com.facebook.lite/.MainActivity"
+#define FACEBOOK_LITE_SCREEN    "com.facebook.lite/com.facebook.lite.MainActivity"
 
 // UNKNOW_SCREEN
 #define UNKNOW_SCREEN           "UNKNOW_SCREEN"

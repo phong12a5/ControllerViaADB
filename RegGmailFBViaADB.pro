@@ -26,7 +26,9 @@ HEADERS += \
     Controller/RegDeviceInfoController.h \
     Controller/RegFBController.h \
     Controller/RegMailController.h \
-    AppModel.h
+    AppModel.h \
+    Processing/CheckCurrSrcThread.h \
+    Controller/ThreadController.h
 
 SOURCES += \
         main.cpp \
@@ -37,7 +39,9 @@ SOURCES += \
     Controller/RegDeviceInfoController.cpp \
     Controller/RegFBController.cpp \
     Controller/RegMailController.cpp \
-    AppModel.cpp
+    AppModel.cpp \
+    Processing/CheckCurrSrcThread.cpp \
+    Controller/ThreadController.cpp
 
 RESOURCES +=
 

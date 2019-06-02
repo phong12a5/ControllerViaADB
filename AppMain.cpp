@@ -10,7 +10,7 @@ AppMain* AppMain::m_instance = nullptr;
 AppMain::AppMain(QObject *parent) : QObject(parent)
 {
     m_currentActivity = QString("---");
-    m_updateCurrActTimer.setInterval(200);
+    m_updateCurrActTimer.setInterval(1000);
     m_updateCurrActTimer.setSingleShot(false);
     m_currentExcuteStep = AppEnums::E_EXCUTE_CHANGE_INFO;
 }
@@ -128,9 +128,10 @@ void AppMain::initApplication()
 void AppMain::startProgram(QString tokenID)
 {
     LOG << "[AppMain] " << tokenID;
-    this->setCurrentActivity(ADBCommand::currentActivity());
     this->restartProgram();
-    m_updateCurrActTimer.start();
+//    m_updateCurrActTimer.start();
+    LOG << "Created new checking screen thread";
+    emit screenController.operate("Start new thread");
 }
 
 void AppMain::closeProgram(QString tokenID)
@@ -142,9 +143,13 @@ void AppMain::closeProgram(QString tokenID)
 void AppMain::restartProgram()
 {
     LOG << "AppMain";
+    REG_MAIL_CTR->setUserInforToReg();
     this->wipeData();
-    this->killCurrentApp();
-    ADBCommand::goHomeScreen();
+    if(this->getCurrentActivity() == HOME_SCREEN){
+        emit this-> currentActivityChanged();
+    }else{
+        ADBCommand::goHomeScreen();
+    }
 }
 
 QString AppMain::getCurrentActivity()
@@ -156,9 +161,16 @@ void AppMain::setCurrentActivity(QString _activity)
 {
     if(m_currentActivity != _activity){
         LOG << "[AppMain]" << _activity;
-        m_currentActivity = _activity;
-        this->setCurrentPackage(m_currentActivity.split("/").at(0));
-        emit currentActivityChanged();
+        if(_activity == UNKNOW_SCREEN){
+            // Do nothing
+        }else{
+            QMutex mutex;
+            mutex.lock();
+            m_currentActivity = _activity;
+            mutex.unlock();
+            this->setCurrentPackage(m_currentActivity.split("/").at(0));
+            emit currentActivityChanged();
+        }
     }
 }
 
@@ -190,12 +202,12 @@ void AppMain::setCurrentExcuteStep(AppEnums::E_EXCUTE_STEPS step)
 
 void AppMain::onUpdateCurrentActivity()
 {
-    this->setCurrentActivity(ADBCommand::currentActivity());
+//    this->setCurrentActivity(ADBCommand::currentActivity());
 }
 
 void AppMain::onProcessFinished(int currentStep, int exitCode)
 {
-    LOG << "[AppMain]" << "currentStep: " << currentStep << " --- exitCode: " << exitCode;
+    LOG << "[AppMain]" << "currentStep: " << (currentStep == 0? "CHANGE DEVICE" : (currentStep == 1? "REG GMAIL" : "REG FACEBOOK")) << " --- exitCode: " << exitCode;
     if(exitCode == 1){
         LOG << "[AppMain]" << "Process incompleted! -> Restart process";
         this->setCurrentExcuteStep(AppEnums::E_EXCUTE_CHANGE_INFO);
@@ -210,18 +222,20 @@ void AppMain::onProcessFinished(int currentStep, int exitCode)
             LOG << "[AppMain]" << "Reg gmail completed! -> Start reg facebook";
             if(APP_MODEL->regFacebookOption()){
                 this->setCurrentExcuteStep(AppEnums::E_EXCUTE_REG_FACBOOK);
+                if(this->getCurrentActivity() == HOME_SCREEN){
+                    emit this-> currentActivityChanged();
+                }else{
+                    ADBCommand::goHomeScreen();
+                }
             }else{
+                REG_MAIL_CTR->saveEmailToOutput();
                 this->setCurrentExcuteStep(AppEnums::E_EXCUTE_CHANGE_INFO);
+                this->restartProgram();
             }
-            this->killCurrentApp();
-            ADBCommand::goHomeScreen();
         }else if(currentStep == AppEnums::E_EXCUTE_REG_FACBOOK){
             REG_MAIL_CTR->saveEmailToOutput();
-            REG_MAIL_CTR->setUserInforToReg();
             LOG << "[AppMain]" << "Process completed! -> Restart process";
             this->setCurrentExcuteStep(AppEnums::E_EXCUTE_CHANGE_INFO);
-            this->killCurrentApp();
-            ADBCommand::goHomeScreen();
             this->restartProgram();
         }
     }
