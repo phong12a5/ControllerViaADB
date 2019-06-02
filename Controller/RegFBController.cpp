@@ -6,8 +6,9 @@
 
 RegFBController* RegFBController::m_intance = nullptr;
 
-RegFBController::RegFBController(QObject *parent) : QObject(parent)
+RegFBController::RegFBController(QObject *parent)
 {
+    Q_UNUSED(parent);
     m_currentScreenID = -1;
 }
 

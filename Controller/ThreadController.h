@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include "Processing/CheckCurrSrcThread.h"
+#include "Base/RegControllerBase.h"
 
 class ThreadController : public QObject
 {
@@ -13,8 +14,15 @@ public:
     ~ThreadController();
 
 private:
-    QThread m_checkCurSrcThread;
-    CheckCurrSrcThread* updateScreenWorker;
+    QThread m_checkScreenThread;
+    QThread m_regDeviceInfoThread;
+    QThread m_regGmailThread;
+    QThread m_regFacebookThread;
+
+    CheckCurrSrcThread checkScreenWorker;
+
+public:
+    void startNewThreads();
 
 signals:
     void operate(const QString &);

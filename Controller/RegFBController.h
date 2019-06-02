@@ -8,8 +8,9 @@
 #include "Processing/ImageProcessing.h"
 #include <QTimer>
 #include "AppModel.h"
+#include "Base/RegControllerBase.h"
 
-class RegFBController : public QObject
+class RegFBController : public RegControllerBase
 {
     Q_OBJECT
 private:
@@ -45,7 +46,7 @@ signals:
     void currentScreenChange();
 
 public slots:
-    void onCurrentActivityChanged();
+    void onCurrentActivityChanged() override;
     void onCheckCurrentScreen();
     void onUpdateAction();
 };

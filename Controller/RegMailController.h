@@ -7,8 +7,9 @@
 #include "Processing/ADBCommand.h"
 #include "Processing/HttpRequestController.h"
 #include <stdio.h>
+#include "Base/RegControllerBase.h"
 
-class RegMailController : public QObject
+class RegMailController : public RegControllerBase
 {
     Q_OBJECT
 
@@ -40,7 +41,7 @@ private:
 signals:
 
 public slots:
-    void onCurrentActivityChanged();
+    void onCurrentActivityChanged() override;
 };
 
 #endif // REGMAILCONTROLLER_H

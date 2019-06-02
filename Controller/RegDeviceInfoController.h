@@ -4,8 +4,9 @@
 #include <QObject>
 #include "AppDefines.h"
 #include "AppEnums.h"
+#include "Base/RegControllerBase.h"
 
-class RegDeviceInfoController : public QObject
+class RegDeviceInfoController : public RegControllerBase
 {
     Q_OBJECT
 private:
@@ -21,7 +22,7 @@ private:
 signals:
 
 public slots:
-    void onCurrentActivityChanged();
+    void onCurrentActivityChanged() override;
 };
 
 #endif // REGDEVICEINFOCONTROLLER_H

@@ -10,8 +10,6 @@ AppMain* AppMain::m_instance = nullptr;
 AppMain::AppMain(QObject *parent) : QObject(parent)
 {
     m_currentActivity = QString("---");
-    m_updateCurrActTimer.setInterval(1000);
-    m_updateCurrActTimer.setSingleShot(false);
     m_currentExcuteStep = AppEnums::E_EXCUTE_CHANGE_INFO;
 }
 
@@ -115,11 +113,10 @@ void AppMain::initApplication()
     REG_MAIL_CTR->initRegMailController();
     REG_FBACC_CTR->initRegFBController();
 
-    QObject::connect(&m_updateCurrActTimer, SIGNAL(timeout()), this, SLOT(onUpdateCurrentActivity()));
     QObject::connect(this, SIGNAL(processFinished(int,int)), this, SLOT(onProcessFinished(int,int)));
-    QObject::connect(this, SIGNAL(currentActivityChanged()), REG_DEVICE_INFO_CTR,   SLOT(onCurrentActivityChanged()));
-    QObject::connect(this, SIGNAL(currentActivityChanged()), REG_MAIL_CTR,          SLOT(onCurrentActivityChanged()));
-    QObject::connect(this, SIGNAL(currentActivityChanged()), REG_FBACC_CTR,         SLOT(onCurrentActivityChanged()));
+//    QObject::connect(this, SIGNAL(currentActivityChanged()), REG_DEVICE_INFO_CTR,   SLOT(onCurrentActivityChanged()));
+//    QObject::connect(this, SIGNAL(currentActivityChanged()), REG_MAIL_CTR,          SLOT(onCurrentActivityChanged()));
+//    QObject::connect(this, SIGNAL(currentActivityChanged()), REG_FBACC_CTR,         SLOT(onCurrentActivityChanged()));
     QObject::connect(APP_MODEL, SIGNAL(signalStartProgram(QString)), this, SLOT(startProgram(QString)));
     QObject::connect(APP_MODEL, SIGNAL(signalCloseProgram(QString)), this, SLOT(closeProgram(QString)));
     QObject::connect(APP_MODEL, SIGNAL(signalSaveSettingConfig()), this, SLOT(saveConfig()));
@@ -129,9 +126,8 @@ void AppMain::startProgram(QString tokenID)
 {
     LOG << "[AppMain] " << tokenID;
     this->restartProgram();
-//    m_updateCurrActTimer.start();
-    LOG << "Created new checking screen thread";
-    emit screenController.operate("Start new thread");
+    multiThreadController.startNewThreads();
+    emit multiThreadController.operate("Start new thread");
 }
 
 void AppMain::closeProgram(QString tokenID)
@@ -160,7 +156,6 @@ QString AppMain::getCurrentActivity()
 void AppMain::setCurrentActivity(QString _activity)
 {
     if(m_currentActivity != _activity){
-        LOG << "[AppMain]" << _activity;
         if(_activity == UNKNOW_SCREEN){
             // Do nothing
         }else{
@@ -181,7 +176,6 @@ QString AppMain::getCurrentPackage()
 
 void AppMain::setCurrentPackage(QString _package)
 {
-    LOG << "[AppMain]" << _package;
     if(m_currentPackage != _package){
         m_currentPackage = _package;
     }
@@ -198,11 +192,6 @@ void AppMain::setCurrentExcuteStep(AppEnums::E_EXCUTE_STEPS step)
         LOG << "[AppMain]" << step;
         m_currentExcuteStep = step;
     }
-}
-
-void AppMain::onUpdateCurrentActivity()
-{
-//    this->setCurrentActivity(ADBCommand::currentActivity());
 }
 
 void AppMain::onProcessFinished(int currentStep, int exitCode)

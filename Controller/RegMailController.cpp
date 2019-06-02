@@ -7,9 +7,9 @@
 
 RegMailController* RegMailController::m_instance = nullptr;
 
-RegMailController::RegMailController(QObject *parent) : QObject(parent)
+RegMailController::RegMailController(QObject *parent)
 {
-
+    Q_UNUSED(parent);
 }
 
 RegMailController *RegMailController::instance()

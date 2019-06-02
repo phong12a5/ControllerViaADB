@@ -133,6 +133,7 @@ bool ADBCommand::checkConnection()
         return false;
     }else {
         QString output = proc.readAllStandardOutput();
+        LOG << "output: " << output;
         output.remove("List of devices attached");
         output.remove("device");
         output.remove("\r");

@@ -28,7 +28,8 @@ HEADERS += \
     Controller/RegMailController.h \
     AppModel.h \
     Processing/CheckCurrSrcThread.h \
-    Controller/ThreadController.h
+    Controller/ThreadController.h \
+    Controller/Base/RegControllerBase.h
 
 SOURCES += \
         main.cpp \
@@ -41,7 +42,8 @@ SOURCES += \
     Controller/RegMailController.cpp \
     AppModel.cpp \
     Processing/CheckCurrSrcThread.cpp \
-    Controller/ThreadController.cpp
+    Controller/ThreadController.cpp \
+    Controller/Base/RegControllerBase.cpp
 
 RESOURCES +=
 

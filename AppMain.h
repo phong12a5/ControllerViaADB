@@ -50,11 +50,11 @@ public:
 
 private:
     static AppMain* m_instance;
-    ThreadController screenController;
+    ThreadController multiThreadController;
+    ThreadController regDeviceThread;
 private:
     QString m_currentActivity;
     QString m_currentPackage;
-    QTimer m_updateCurrActTimer;
     AppEnums::E_EXCUTE_STEPS m_currentExcuteStep;
 
 signals:
@@ -62,7 +62,6 @@ signals:
     void processFinished(int stepId, int exitCode);
 
 public slots:
-    void onUpdateCurrentActivity();
     void onProcessFinished(int currentStep, int exitCode);
     void startProgram(QString tokenID);
     void closeProgram(QString tokenID);

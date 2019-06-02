@@ -5,9 +5,9 @@
 
 RegDeviceInfoController* RegDeviceInfoController::m_intance = nullptr;
 
-RegDeviceInfoController::RegDeviceInfoController(QObject *parent) : QObject(parent)
+RegDeviceInfoController::RegDeviceInfoController(QObject *parent)
 {
-
+    Q_UNUSED(parent);
 }
 
 RegDeviceInfoController *RegDeviceInfoController::instance()
